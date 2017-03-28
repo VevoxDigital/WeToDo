@@ -1,0 +1,21 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+
+    // Cordova meta
+    meta(http-equiv='Content-Security-Policy' content=`default-src 'self' 'unsafe-inline' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;`)
+    meta(name='format-detection' content='telephone=no')
+    meta(name='msapplication-tap-highlight' content='no')
+    meta(name='viewport' content='user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width')
+
+    // App meta
+    meta(name='description' content=app.desc)
+    meta(name='author' content=app.author)
+    meta(name='keywords' content=app.keywords.join(','))
+
+    block scripts
+      script(src='cordova.js' type='text/javascript')
+      include ../include/scripts.pug
+  body
+    block body
