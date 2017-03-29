@@ -25,7 +25,7 @@ exports = module.exports = grunt => {
     copy: {
       package: {
         files: {
-          'www/package.json': 'package.json'
+          'www/bower.json': 'bower.json'
         }
       },
       resources: {
@@ -63,7 +63,7 @@ exports = module.exports = grunt => {
 
     shell: {
       install: {
-        command: 'cd www && npm i --production && cd ..'
+        command: 'cd www && bower i && cd ..'
       },
       start: {
         command: 'cd www && npm start && cd ..'
