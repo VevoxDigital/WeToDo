@@ -51,6 +51,17 @@ exports = module.exports = grunt => {
       }
     },
 
+    sass: {
+      options: {
+        outputStyle: 'compressed'
+      },
+      app: {
+        files: [
+          { expand: true, cwd: 'src/app', src: [ 'style/*.scss' ], dest: 'www', ext: '.css' }
+        ]
+      }
+    },
+
     cordovacli: {
       options: {
         cli: 'cordova'
@@ -75,6 +86,7 @@ exports = module.exports = grunt => {
   grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-contrib-pug')
+  grunt.loadNpmTasks('grunt-sass')
   grunt.loadNpmTasks('grunt-shell')
 
   grunt.registerTask('copy:app', [
@@ -88,6 +100,7 @@ exports = module.exports = grunt => {
     'copy:app',
     'babel:app',
     'pug:app',
+    'sass:app',
     'shell:install',
     'clean:tmp'
   ])
