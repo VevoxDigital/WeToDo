@@ -1,4 +1,7 @@
 @import 'include/colors';
+@import 'include/functions';
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Ubuntu:700');
 
 * { box-sizing: border-box; }
 
@@ -14,3 +17,5 @@ body {
     width: 100vw;
   }
 }
+
+@import 'include/header';
