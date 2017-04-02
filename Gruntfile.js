@@ -51,6 +51,16 @@ exports = module.exports = grunt => {
       }
     },
 
+    mochaTest: {
+      app: {
+        options: {
+          // TODO Istanbul reporter?
+        },
+        src: [ 'test/**/*.js' ]
+        // dest: 'coverage/coverage.lcov'
+      }
+    },
+
     sass: {
       options: {
         outputStyle: 'compressed'
@@ -86,6 +96,7 @@ exports = module.exports = grunt => {
   grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-contrib-pug')
+  grunt.loadNpmTasks('grunt-mocha-test')
   grunt.loadNpmTasks('grunt-sass')
   grunt.loadNpmTasks('grunt-shell')
 
@@ -110,7 +121,8 @@ exports = module.exports = grunt => {
     'shell:start'
   ])
   grunt.registerTask('test', [
-    // TODO
+    'compile',
+    'mochaTest:app'
   ])
 
   grunt.registerTask('default', [ 'run' ])
