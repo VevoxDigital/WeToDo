@@ -17,9 +17,20 @@ exports = module.exports = grunt => {
       }
     },
 
+    browserify: {
+      options: {
+        external: [ 'jquery' ]
+      },
+      app: {
+        files: {
+          'www/app.js': [ 'www/js/**/*.js' ]
+        }
+      }
+    },
+
     clean: {
       compile: [ 'www/' ],
-      tmp: [ 'tmp/' ]
+      tmp: [ 'tmp/', 'www/js' ]
     },
 
     copy: {
@@ -93,6 +104,7 @@ exports = module.exports = grunt => {
   })
 
   grunt.loadNpmTasks('grunt-babel')
+  grunt.loadNpmTasks('grunt-browserify')
   grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-contrib-pug')
@@ -110,6 +122,7 @@ exports = module.exports = grunt => {
     'clean:compile',
     'copy:app',
     'babel:app',
+    'browserify:app',
     'pug:app',
     'sass:app',
     'shell:install',
