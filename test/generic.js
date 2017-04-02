@@ -16,17 +16,17 @@ describe('Sanity Checks', () => {
       expect(stats.isDirectory()).to.be(true)
     })
 
-    it('should have installed bower components', () => {
+    it('should have installed npm components', () => {
       expect(fs.statSync)
-        .withArgs(path.join(TARGET_DIR, 'bower.json'))
+        .withArgs(path.join(TARGET_DIR, 'package.json'))
         .to.not.throwException()
 
       expect(fs.statSync)
-        .withArgs(path.join(TARGET_DIR, 'bower_components'))
+        .withArgs(path.join(TARGET_DIR, 'node_modules'))
         .to.not.throwException()
 
-      expect(fs.readFileSync(path.join(ROOT_DIR, 'bower.json')).toString())
-        .to.equal(fs.readFileSync(path.join(TARGET_DIR, 'bower.json')).toString())
+      expect(fs.readFileSync(path.join(ROOT_DIR, 'package.json')).toString())
+        .to.equal(fs.readFileSync(path.join(TARGET_DIR, 'package.json')).toString())
     })
 
     it('should have copied resources', () => {
