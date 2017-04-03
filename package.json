@@ -16,7 +16,9 @@
     "globals": [
       "$",
       "describe",
-      "it"
+      "it",
+      "before",
+      "beforeEach"
     ]
   },
   "devDependencies": {

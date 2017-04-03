@@ -1,0 +1,62 @@
+'use strict'
+
+const { handlers } = require('./list-handlers')
+
+/**
+  * @class ListModificationEntry
+  * An entry in a list's history that represents a change to the list itself
+  */
+exports.ListModificationEntry = class ListModificationEntry {
+  /**
+    * @constructor ListModificationEntry(List, string|object)
+    * Creates a new list entry for the given list from the given data. If the
+    * data is a string, the data will be parsed into an object and recursively called.
+    */
+  constructor (list, data) {
+    if (!(list instanceof exports.List)) throw new Error('Given list must be a List object')
+    if (typeof data === 'string' && data.match(exports.ListModificationEntry.pattern)) {
+      // parse key string into object
+      let obj = exports.ListModificationEntry.pattern.exec(data)
+      if (!obj) throw new Error('Bad entry line: ' + obj)
+      return new exports.ListModificationEntry(list, {
+        time: new Date(Number.parseInt(obj[1], 10)),
+        command: obj[2],
+        user: obj[3],
+        data: obj[4]
+      })
+    } else if (typeof data === 'object') {
+      // we have a data object, make a class of it
+      Object.defineProperty(this, 'list', { value: list })
+      Object.defineProperty(this, 'time', { value: data.time, enumerable: true })
+      Object.defineProperty(this, 'command', { value: data.command, enumerable: true })
+      Object.defineProperty(this, 'user', { value: data.user, enumerable: true })
+      Object.defineProperty(this, 'data', { value: data.data, enumerable: true })
+
+      const handler = handlers[data.command]
+      if (!handler) throw new Error('Unknown command')
+      Object.defineProperty(this, 'handler', { value: handler })
+    } else throw new Error('data must be entry line or object')
+  }
+
+  /**
+    * @method #resolveUser()
+    * Resolves the user associated with this entry. This will return a Promise to
+    * either load the user from the cache, or look up the user's information.
+    *
+    * @return Promise<object>
+    */
+  resolveUser () {
+    // TODO Fetch user information from user ID
+    // possibly a separate user resolver?
+    return new Promise(resolve => { resolve(this.user) })
+  }
+}
+
+// entry pattern is in format
+// timestamp COMMAND provider:uid data
+// ex: 123456789 CREATE google:123456 CHECK|Example Checklist Item
+exports.ListModificationEntry.pattern = /^([0-9]+) ([A-Z_]+) ([a-z]+:\d+) (.+)$/
+
+exports.List = class List {
+
+}

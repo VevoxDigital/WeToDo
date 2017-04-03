@@ -134,7 +134,7 @@ exports = module.exports = grunt => {
     'shell:start'
   ])
   grunt.registerTask('test', [
-    'compile',
+    'compile', // we're running the compile task because we're also testing its functionality
     'mochaTest:app'
   ])
 
