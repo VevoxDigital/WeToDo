@@ -47,15 +47,21 @@ describe('ListModificationEntry', () => {
     })
   })
 
+  let entry
+
+  beforeEach(() => {
+    entry = new lists.ListModificationEntry(list, ENTRY_STRING)
+  })
+
   describe('#resolveUser()', () => {
-    let entry
-
-    beforeEach(() => {
-      entry = new lists.ListModificationEntry(list, ENTRY_STRING)
-    })
-
     it('should return a promise', () => {
       expect(entry.resolveUser()).to.be.a(Promise)
+    })
+  })
+
+  describe('#toString()', () => {
+    it('should serialize into input data', () => {
+      expect(entry.toString()).to.be(ENTRY_STRING)
     })
   })
 })

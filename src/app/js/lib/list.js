@@ -50,6 +50,16 @@ exports.ListModificationEntry = class ListModificationEntry {
     // possibly a separate user resolver?
     return new Promise(resolve => { resolve(this.user) })
   }
+
+  /**
+    * @method #toString()
+    * Serializes this entry back into a string.
+    *
+    * @return string
+    */
+  toString () {
+    return `${this.time.getTime()} ${this.command} ${this.user} ${this.data}`
+  }
 }
 
 // entry pattern is in format
