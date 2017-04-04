@@ -9,8 +9,19 @@
     "build": "grunt build",
     "test": "grunt test"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VevoxDigital/WeToDo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/VevoxDigital/WeToDo/issues"
+  },
   "author": "Vevox Digital",
+  "contributors": [
+    "Matthew Struble <matt@vevox.io>"
+  ],
   "license": "GPL-3.0",
+  "private": true,
   "keywords": [],
   "standard": {
     "globals": [
@@ -20,6 +31,9 @@
       "before",
       "beforeEach"
     ]
+  },
+  "engines": {
+    "node": ">=6.0"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.24.0",
