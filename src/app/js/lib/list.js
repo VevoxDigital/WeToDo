@@ -14,7 +14,7 @@ exports.ListModificationEntry = class ListModificationEntry {
     */
   constructor (list, data) {
     if (!(list instanceof exports.List)) throw new Error('Given list must be a List object')
-    if (typeof data === 'string' && data.match(exports.ListModificationEntry.pattern)) {
+    if (typeof data === 'string') {
       // parse key string into object
       let obj = exports.ListModificationEntry.pattern.exec(data)
       if (!obj) throw new Error('Bad entry line: ' + obj)
@@ -83,16 +83,17 @@ exports.List = class List {
       const list = new exports.List({ name: data.shift(), users: data.shift().split(/\n/g) })
       for (const line of data) {
         try {
-          list.addEntry(new exports.ListModificationEntry(line))
+          list.addEntry(new exports.ListModificationEntry(this, line))
         } catch (e) {
-          console.warning(e)
+          // console.warn(e)
         }
       }
+      return list
     } else {
       Object.defineProperty(this, 'name', { value: data.name, enumerable: true })
 
-      Object.defineProperty(this, '_entires', { value: [ ], writeable: true })
-      Object.defineProperty(this, '_user', { value: data.users || [ data.user ], writeable: true })
+      Object.defineProperty(this, '_entries', { value: [ ], writeable: true })
+      Object.defineProperty(this, '_users', { value: data.users || (data.user ? [ data.user ] : [ ]), writeable: true })
     }
   }
   get entries () {
