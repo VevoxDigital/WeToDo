@@ -1,6 +1,6 @@
 # WeToDo
 
-**Don't track me, I'll track myself.**
+**What's to be doing?**
 
 [![Travis](https://img.shields.io/travis/VevoxDigital/WeToDo/master.svg?style=flat-square)](https://travis-ci.org/VevoxDigital/WeToDo)
 [![Code Climate](https://img.shields.io/codeclimate/github/VevoxDigital/WeToDo.svg?style=flat-square)](https://codeclimate.com/github/VevoxDigital/WeToDo)
