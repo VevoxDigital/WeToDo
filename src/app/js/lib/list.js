@@ -10,7 +10,7 @@ exports.ListModificationEntry = class ListModificationEntry {
   /**
     * @constructor ListModificationEntry(List, string|object)
     * Creates a new list entry for the given list from the given data. If the
-    * data is a string, the data will be parsed into an object and recursively called.
+    * data is a string, the data will be parsed into an object and recursively invoked.
     */
   constructor (list, data) {
     if (!(list instanceof exports.List)) throw new Error('Given list must be a List object')
@@ -67,6 +67,73 @@ exports.ListModificationEntry = class ListModificationEntry {
 // ex: 123456789 CREATE google:123456 CHECK|Example Checklist Item
 exports.ListModificationEntry.pattern = /^([0-9]+) ([A-Z_]+) ([a-z]+:\d+) (.+)$/
 
+/**
+  * @class List
+  * A list object containing the data to define a list
+  */
 exports.List = class List {
+  /**
+    * @constructor List(string|object)
+    * Creates a new list from the given data. If the date is a string, its is
+    * parsed into an object and this constructor is recursively invoked.
+    */
+  constructor (data) {
+    if (typeof data === 'string') {
+      data = data.split(/\n/g)
+      const list = new exports.List({ name: data.shift(), users: data.shift().split(/\n/g) })
+      for (const line of data) {
+        try {
+          list.addEntry(new exports.ListModificationEntry(line))
+        } catch (e) {
+          console.warning(e)
+        }
+      }
+    } else {
+      Object.defineProperty(this, 'name', { value: data.name, enumerable: true })
 
+      Object.defineProperty(this, '_entires', { value: [ ], writeable: true })
+      Object.defineProperty(this, '_user', { value: data.users || [ data.user ], writeable: true })
+    }
+  }
+  get entries () {
+    return this._entries.slice()
+  }
+  get users () {
+    return this._users.slice()
+  }
+
+  /**
+    * @method #addEntry(ListModificationEntry)
+    * Adds a list entry to this list
+    *
+    * @param entry A list entry
+    */
+  addEntry (entry) {
+    if (!(entry instanceof exports.ListModificationEntry)) throw new Error('Entry must be a list')
+    this._entries.push(entry)
+  }
+
+  /**
+    * @method #resolveUsers()
+    * Returns a promise that resolves with a list of all resolved users
+    *
+    * @return Promise<Array<User>>
+    */
+  resolveUsers () {
+    // TODO User resolution
+    return new Promise(resolve => { return resolve(this.users) })
+  }
+
+  /**
+    * @method #toString()
+    * Serializes this list into a string.
+    *
+    * @return string
+    */
+  toString () {
+    let str = `${this.name}\n${this.users.join(' ')}`
+    for (const entry of this.entries) str += `\n${entry.toString()}`
+
+    return str
+  }
 }
