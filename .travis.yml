@@ -14,3 +14,11 @@ branches:
   only:
   - master
   - dev
+
+addons:
+    code_climate:
+        repo_token: a37b372f643c1d70a9c568f77735246917941b460cb8344130aedf400f023ba3
+
+after_success:
+- npm i -g codeclimate-test-reporter
+codeclimate-test-reporter < coverage/lcov.info
