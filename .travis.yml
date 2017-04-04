@@ -21,4 +21,4 @@ addons:
 
 after_success:
 - npm i -g codeclimate-test-reporter
-codeclimate-test-reporter < coverage/lcov.info
+- codeclimate-test-reporter < coverage/lcov.info
