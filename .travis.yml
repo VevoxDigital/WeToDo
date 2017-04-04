@@ -1,0 +1,16 @@
+# Skribki Wiki CI configuration.
+# https://travis-ci.org/VevoxDigital/Skribki
+
+language: node_js
+node_js:
+- 'stable'
+
+# Install necessary packages before runtime
+install:
+- npm install
+
+# Build only master/dev. Other branches are docs, examples, or legacy.
+branches:
+  only:
+  - master
+  - dev
