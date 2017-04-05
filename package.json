@@ -26,6 +26,7 @@
   "standard": {
     "globals": [
       "$",
+      "cordova",
       "describe",
       "it",
       "before",
@@ -55,6 +56,7 @@
   "dependencies": {
     "browserify": "^14.1.0",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.2.1"
+    "jquery": "^3.2.1",
+    "uuid": "^3.0.1"
   }
 }

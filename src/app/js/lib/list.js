@@ -2,6 +2,8 @@
 
 const { handlers } = require('./list-handlers')
 
+const genUuid = require('uuid/v4')
+
 /**
   * @class ListModificationEntry
   * An entry in a list's history that represents a change to the list itself
@@ -67,6 +69,8 @@ exports.ListModificationEntry = class ListModificationEntry {
 // ex: 123456789 CREATE google:123456 CHECK|Example Checklist Item
 exports.ListModificationEntry.pattern = /^([0-9]+) ([A-Z_]+) ([a-z]+:\d+) (.+)$/
 
+// -----------------------------------------------------------------------------------------------------
+
 /**
   * @class List
   * A list object containing the data to define a list
@@ -77,10 +81,10 @@ exports.List = class List {
     * Creates a new list from the given data. If the date is a string, its is
     * parsed into an object and this constructor is recursively invoked.
     */
-  constructor (data) {
+  constructor (data, uuid) {
     if (typeof data === 'string') {
       data = data.split(/\n/g)
-      const list = new exports.List({ name: data.shift(), users: data.shift().split(/\n/g) })
+      const list = new exports.List({ name: data.shift(), users: data.shift().split(/ /g) }, uuid)
       for (const line of data) {
         try {
           list.addEntry(new exports.ListModificationEntry(this, line))
@@ -91,9 +95,10 @@ exports.List = class List {
       return list
     } else {
       Object.defineProperty(this, 'name', { value: data.name, enumerable: true })
+      Object.defineProperty(this, 'uuid', { value: uuid || genUuid(), enumerable: true })
 
       Object.defineProperty(this, '_entries', { value: [ ], writeable: true })
-      Object.defineProperty(this, '_users', { value: data.users || (data.user ? [ data.user ] : [ ]), writeable: true })
+      Object.defineProperty(this, '_users', { value: data.user ? [ data.user ] : [ ], writeable: true })
     }
   }
   get entries () {
