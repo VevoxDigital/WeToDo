@@ -131,6 +131,16 @@ exports.List = class List {
   }
 
   /**
+    * @method #isShared()
+    * Determines if this list is shared (i.e. is has multiple users).
+    *
+    * @return boolean
+    */
+  isShared () {
+    return this.users.length > 1
+  }
+
+  /**
     * @method #toString()
     * Serializes this list into a string.
     *
