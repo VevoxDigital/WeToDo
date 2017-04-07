@@ -81,6 +81,7 @@ exports.List = class List {
     * Creates a new list from the given data. If the date is a string, its is
     * parsed into an object and this constructor is recursively invoked.
     */
+  /* eslint complexity: [ 'error', 7 ] */
   constructor (data, uuid) {
     if (typeof data === 'string') {
       data = data.split(/\n/g)
@@ -98,7 +99,8 @@ exports.List = class List {
       Object.defineProperty(this, 'uuid', { value: uuid || genUuid(), enumerable: true })
 
       Object.defineProperty(this, '_entries', { value: [ ], writeable: true })
-      Object.defineProperty(this, '_users', { value: data.user ? [ data.user ] : [ ], writeable: true })
+
+      Object.defineProperty(this, '_users', { value: data.users || (data.user ? [ data.user ] : [ ]), writeable: true })
     }
   }
   get entries () {
