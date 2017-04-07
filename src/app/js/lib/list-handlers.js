@@ -8,7 +8,11 @@ class ListCommandHandler {
   }
 
   handle (entry) {
-    // no-op
+    console.log(`${this.command}: ${entry.uuid}`)
+  }
+
+  handleUI (entry, element) {
+    console.log(`UI ${this.command}: ${entry.uuid}`)
   }
 }
 
@@ -18,7 +22,12 @@ class CreateCommandHandler extends ListCommandHandler {
   }
 
   handle (entry) {
+    super.handle(entry)
     // TODO Actually handle this command
+  }
+
+  handleUI (entry, element) {
+    super.handleUI(entry, element)
   }
 }
 

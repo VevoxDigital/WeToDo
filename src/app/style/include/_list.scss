@@ -1,0 +1,50 @@
+.list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+
+  > .list-item {
+    display: flex;
+    padding: 0 15px;
+    padding-top: 10px;
+    width: 100%;
+
+    > .list-icon {
+      flex: 0 0 40px;
+      padding-right: 15px;
+
+      .fa {
+        background: $color-dark;
+        border-radius: 20px;
+        color: $color-white;
+        display: flex;
+        font-size: 20px;
+        height: 40px;
+        margin-top: 5px;
+        text-decoration: none;
+        transition: all 250ms;
+        width: 40px;
+
+        &:hover {
+          opacity: .8;
+        }
+
+        &::before {
+          display: block;
+          margin: auto;
+        }
+      }
+    }
+
+    > .list-body {
+      flex: 1 0 auto;
+
+      h1 {
+        font-family: Ubuntu, sans-serif;
+        font-size: 30px;
+        margin: 0;
+        padding: 0;
+      }
+    }
+  }
+}
