@@ -1,5 +1,45 @@
-$color-black: #000;
+// grays
 $color-white: #fff;
+$color-gray1: #e6e6e6;
+$color-gray2: #ccc;
+$color-gray3: #b3b3b3;
+$color-gray4: #999;
+$color-gray5: #808080;
+$color-gray6: #666;
+$color-gray7: #4d4d4d;
+$color-gray8: #333;
+$color-gray9: #1a1a1a;
+$color-black: #000;
 
+// flatui
+$color-red1: #e74c3c;
+$color-red2: #c0392b;
+$color-orange1: #e67e22;
+$color-orange2: #d35400;
+$color-yellow1: #f1c40f;
+$color-yellow2: #f39c12;
+$color-green1: #2ecc71;
+$color-green2: #27ae60;
+$color-bluegreen1: #1abc9c;
+$color-bluegreen2: #16a085;
+$color-blue1: #3498db;
+$color-blue2: #2980b9;
+$color-purple1: #9b59b6;
+$color-purple2: #8e44ad;
+$color-black1: #34495e;
+$color-black2: #2c3e50;
+$color-white1: #ecf0f1;
+$color-white2: #bdc3c7;
+
+// theme colors
 $color-blue: #0ac;
-$color-dark: #34495e;
+$color-dark: $color-black1;
+
+// tint and shade functions
+@function tint($color, $perc) {
+  @return mix($color-white, $color, $perc);
+}
+
+@function shade($color, $perc) {
+  @return mix($color-black, $color, $perc)
+}

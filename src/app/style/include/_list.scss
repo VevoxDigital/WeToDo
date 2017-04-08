@@ -14,13 +14,13 @@
       padding-right: 15px;
 
       .fa {
-        background: $color-dark;
+        background: $color-gray2;
         border-radius: 20px;
         color: $color-white;
         display: flex;
         font-size: 20px;
         height: 40px;
-        margin-top: 5px;
+        margin-top: 22px;
         text-decoration: none;
         transition: all 250ms;
         width: 40px;
@@ -37,13 +37,47 @@
     }
 
     > .list-body {
-      flex: 1 0 auto;
+      hr {
+        border: 0;
+        border-top: 1px $color-gray2 solid;
+        width: 90%;
+      }
 
       h1 {
+        color: $color-gray7;
         font-family: Ubuntu, sans-serif;
-        font-size: 30px;
+        font-size: 21pt;
+        font-weight: 600;
         margin: 0;
         padding: 0;
+      }
+
+      ul {
+        color: $color-gray4;
+        font-size: 11pt;
+        list-style-type: none;
+        padding: 0;
+        width: 100%;
+
+        li {
+          padding-left: 15px;
+
+          .list-change-icon {
+            font-size: 80%;
+            opacity: .7;
+          }
+
+          .list-change-user {
+            &::before { content: ' by '; }
+            &::after { content: ' '; }
+          }
+        }
+      }
+
+      p {
+        color: $color-gray5;
+        margin: 0;
+        padding: 4px 0;
       }
     }
   }
