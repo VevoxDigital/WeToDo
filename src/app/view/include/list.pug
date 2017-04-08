@@ -1,21 +1,20 @@
 ul.list#listTemplateNode(style='display: none')
-
-
-ul.list#listNode
   li.list-item
     .list-icon
       a.fa.fa-ellipsis-v(href='javascript:')
     .list-body
       hr
       h1 List Title
-      ul.list-changes
+      ul
         li.list-change
           .list-change-icon.fa
           span.list-change-user Unnamed
           span.list-change-time an hour ago
-
       p ERR_NO_DATA The list description could not be queried.
       .list-options
         a.fa.fa-close(href='javascript:')
         a.fa.fa-check(href='javascript:')
-        a.fa.fa-edit(href='javascript:')
+        a.fa.fa-pencil(href='javascript:')
+
+ul.list#listNode
+  
