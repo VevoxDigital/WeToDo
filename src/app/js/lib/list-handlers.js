@@ -1,16 +1,17 @@
 'use strict'
 
 const lists = require('./list')
+const assert = require('assert')
 
 class ListCommandHandler {
   constructor (command) {
-    if (typeof command !== 'string') throw new Error('expected string command, got ' + typeof command)
+    assert.strictEqual(typeof command, 'string')
 
     Object.defineProperty(this, 'command', { value: command, enumerable: true })
   }
 
   handle (data) {
-    if (typeof window !== 'undefined') console.log(`${this.command}: ${this.target || 'LIST'} ${data}`)
+    /* istanbul ignore next */ if (typeof window !== 'undefined') console.log(`${this.command}: ${this.target || 'LIST'} ${data}`)
   }
 
   // an 'undefined' target will target the whole list
