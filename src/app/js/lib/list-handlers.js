@@ -10,8 +10,9 @@ class ListCommandHandler {
     Object.defineProperty(this, 'command', { value: command, enumerable: true })
   }
 
-  handle (data) {
-    /* istanbul ignore next */ if (typeof window !== 'undefined') console.log(`${this.command}: ${this.target || 'LIST'} ${data}`)
+  handle (mod) {
+    /* istanbul ignore next */
+    if (typeof window !== 'undefined') console.log(`${this.command}: ${this.target || 'LIST'} ${mod.data}`)
   }
 
   // an 'undefined' target will target the whole list
@@ -25,11 +26,14 @@ class CreateCommandHandler extends ListCommandHandler {
     super('CREATE')
   }
 
-  handle (data, list) {
-    super.handle(data, list)
+  handle (mod, list) {
+    super.handle(mod, list)
 
-    const argsIndex = data.indexOf('|')
-    list.addEntry(new lists.ListEntry(data.substring(0, argsIndex), data.substring(argsIndex + 1)))
+    const argsIndex = mod.data.indexOf('|')
+    const entry = new lists.ListEntry(mod.data.substring(0, argsIndex), mod.data.substring(argsIndex + 1))
+    entry.appendModification(mod)
+
+    list.addEntry(entry)
   }
 }
 

@@ -52,7 +52,7 @@ exports.ListModification = class ListModification {
     * @param target The target to apply to
     */
   apply (target) {
-    return this.handler.handle(this.data, target)
+    return this.handler.handle(this, target)
   }
 
   /**
@@ -86,13 +86,46 @@ exports.ListEntry = class ListEntry {
     * @param title The title of this entry
     */
   constructor (type, title) {
-    if (typeof type !== 'string') throw new Error('expected string type, got ' + typeof type)
-    if (typeof title !== 'string') throw new Error('expected string title, got ' + typeof title)
+    assert.strictEqual(typeof type, 'string')
+    assert.strictEqual(typeof title, 'string')
 
     Object.defineProperty(this, 'type', { value: type, enumerable: true })
 
     this.title = title
-    this.users = [ ]
+
+    Object.defineProperty(this, '_changes', { value: [ ] })
+  }
+
+  get changes () {
+    return this._changes.slice()
+  }
+
+  /**
+    * @method #appendChange(Date, string, string)
+    * Appends a change with the given data to this entry
+    *
+    * @param time The time of the change
+    * @param user The user that issued the change
+    * @param type The type of change
+    */
+  appendChange (time, user, type) {
+    assert(time instanceof Date, 'time must be a Date')
+    assert.strictEqual(typeof user, 'string')
+    assert.strictEqual(typeof type, 'string')
+
+    this._changes.push({ time: time, user: user, type: type })
+  }
+
+  /**
+    * @method #appendModification(ListModification)
+    * Appends a ListModification as a change to this entry
+    *
+    * @param mod The modification
+    */
+  appendModification (mod) {
+    assert(mod instanceof exports.ListModification, 'modification must be a ListModification')
+
+    this.appendChange(mod.time, mod.user, mod.handler.command)
   }
 }
 

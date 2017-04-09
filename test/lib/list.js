@@ -89,6 +89,8 @@ describe('ListModification', () => {
   })
 })
 
+// -----------------------------------------------------------------------------------------------------
+
 describe('ListEntry', () => {
   describe('<init>', () => {
     it('should create entry from data', () => {
@@ -100,26 +102,34 @@ describe('ListEntry', () => {
       expect(entry.type).to.be(type)
       expect(entry.title).to.be(title)
     })
+  })
 
-    it('should throw an error if type is non-string', () => {
-      try {
-        const entry = new lists.ListEntry()
-        expect.fail(entry)
-      } catch (e) {
-        expect(e.message).to.match(/^expected string type/)
-      }
+  describe('#appendChange()', () => {
+    it('should append a given change', () => {
+      const entry = new lists.ListEntry('Foo', 'note')
+
+      entry.appendChange(ENTRY_DATA.time, ENTRY_DATA.user, ENTRY_DATA.command)
+
+      expect(entry.changes.length).to.be(1)
+      expect(entry.changes[0].time.getTime()).to.be(ENTRY_DATA.time.getTime())
+      expect(entry.changes[0].user).to.be(ENTRY_DATA.user)
+      expect(entry.changes[0].type).to.be(ENTRY_DATA.command)
     })
+  })
 
-    it('should throw an error if title is non-string', () => {
-      try {
-        const entry = new lists.ListEntry('')
-        expect.fail(entry)
-      } catch (e) {
-        expect(e.message).to.match(/^expected string title/)
-      }
+  describe('#appendModification', () => {
+    it('should append a given modification', () => {
+      const entry = new lists.ListEntry('Foo', 'note')
+
+      entry.appendModification(new lists.ListModification(ENTRY_STRING))
+
+      expect(entry.changes.length).to.be(1)
+      expect(entry.changes[0].time.getTime()).to.be(ENTRY_DATA.time.getTime())
     })
   })
 })
+
+// -----------------------------------------------------------------------------------------------------
 
 describe('List', () => {
   describe('parseList', () => {
