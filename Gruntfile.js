@@ -65,7 +65,7 @@ exports = module.exports = grunt => {
     'mocha_istanbul': {
       app: {
         options: {
-          root: './src/app/js'
+          root: './src/app/js/lib'
         },
         src: [ 'test/**/*.js' ]
       }
