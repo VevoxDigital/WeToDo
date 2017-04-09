@@ -1,18 +1,21 @@
 'use strict'
 
+const lists = require('./list')
+
 class ListCommandHandler {
   constructor (command) {
-    if (typeof command !== 'string') throw new Error('Command must be a string')
+    if (typeof command !== 'string') throw new Error('expected string command, got ' + typeof command)
 
     Object.defineProperty(this, 'command', { value: command, enumerable: true })
   }
 
-  handle (entry) {
-    console.log(`${this.command}: ${entry.uuid}`)
+  handle (data) {
+    if (typeof window !== 'undefined') console.log(`${this.command}: ${this.target || 'LIST'} ${data}`)
   }
 
-  handleUI (entry, element) {
-    console.log(`UI ${this.command}: ${entry.uuid}`)
+  // an 'undefined' target will target the whole list
+  get target () {
+    return undefined
   }
 }
 
@@ -21,13 +24,11 @@ class CreateCommandHandler extends ListCommandHandler {
     super('CREATE')
   }
 
-  handle (entry) {
-    super.handle(entry)
-    // TODO Actually handle this command
-  }
+  handle (data, list) {
+    super.handle(data, list)
 
-  handleUI (entry, element) {
-    super.handleUI(entry, element)
+    const argsIndex = data.indexOf('|')
+    list.addEntry(new lists.ListEntry(data.substring(0, argsIndex), data.substring(argsIndex + 1)))
   }
 }
 
