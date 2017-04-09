@@ -117,14 +117,22 @@ exports = module.exports = grunt => {
     'copy:favicon'
   ])
 
-  grunt.registerTask('compile', [
-    'clean:compile',
+  grunt.registerTask('build', [
     'copy:app',
     'babel:app',
     'browserify:app',
     'pug:app',
-    'sass:app',
+    'sass:app'
+  ])
+
+  grunt.registerTask('compile', [
+    'clean:compile',
+    'build',
     'shell:install',
+    'clean:tmp'
+  ])
+  grunt.registerTask('recompile', [
+    'build',
     'clean:tmp'
   ])
 
@@ -132,6 +140,11 @@ exports = module.exports = grunt => {
     'compile',
     'shell:start'
   ])
+  grunt.registerTask('rerun', [
+    'recompile',
+    'shell:start'
+  ])
+
   grunt.registerTask('test', [
     'compile', // we're running the compile task because we're also testing its functionality
     'mocha_istanbul:app'
