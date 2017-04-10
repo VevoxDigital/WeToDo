@@ -9,8 +9,8 @@ class App {
     // DEBUG
     const list = new List(undefined, 'Example List', 'gh:1234')
 
-    list.addModification(new ListModification(`${new Date().getTime() - 10000} CREATE gh:1234 note|Example Note`))
-    list.addModification(new ListModification(`${new Date().getTime()} CREATE gh:1234 note|Another Thing`))
+    list.addModification(new ListModification(`${new Date().getTime() - 1000 * 60} CREATE local:1 note|Example Note`))
+    list.addModification(new ListModification(`${new Date().getTime()} CREATE local:0 note|Another Thing`))
 
     list.reset()
 
@@ -23,7 +23,7 @@ class App {
       setInterval(() => {
         const times = $('#listNode .list-change-time')
         times.html(ago(Number.parseInt(times.attr('data-timestamp'), 10)))
-      }, 1000 * 60)
+      }, 1000 * 30)
 
       Object.defineProperty(this, 'templateNode', { value: $('#listTemplateNode') })
       this.renderList(list)
@@ -46,6 +46,10 @@ class App {
     }
   }
 
+  getActiveListItem () {
+    return Number.parseInt($('#listNode').attr('data-active-item') || '-1', 10)
+  }
+
   setActiveListItem (item) {
     const nodes = $('#listNode').find('li > .list-body')
     nodes.find('p').hide()
@@ -53,10 +57,14 @@ class App {
     nodes.find('ul > li:not(:nth-child(1))').hide()
 
     if (typeof item === 'number') {
-      const node = nodes.eq(item)
+      const node = $('#listNode').find(`li[data-id=${item}]`)
       node.find('p').show()
       node.find('.list-options').show()
       node.find('ul > li').show()
+
+      $('#listNode').attr('data-active-item', item)
+    } else {
+      $('#listNode').removeAttr('data-active-item')
     }
   }
 
@@ -72,6 +80,10 @@ class App {
     const body = item.find('.list-body')
 
     body.find('h1').html(entry.title)
+
+    body.click(e => {
+      if (!$(e.target).is('a')) this.setActiveListItem(this.getActiveListItem() !== id && id)
+    })
 
     body.find('ul').empty()
     entry.changes.forEach(change => {
