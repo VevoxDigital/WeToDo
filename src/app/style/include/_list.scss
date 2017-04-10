@@ -110,7 +110,9 @@
   width: 100%;
 
   a {
+    color: inherit;
     padding: 0 10vw;
+    text-decoration: none;
     vertical-align: middle;
 
     &:nth-child(2) {
