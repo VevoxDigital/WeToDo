@@ -11,10 +11,10 @@ const assert = require('assert')
   */
 exports.ListModification = class ListModification {
   /**
-    * @constructor ListModification(string)
+    * @constructor
     * Creates a new list entry for the given list from the given data.
     *
-    * @param data The data to parse the modification from
+    * @param {string} data The data to parse the modification from
     */
   constructor (data) {
     if (typeof data !== 'string') throw new Error('expected string data, got ' + typeof data)
@@ -33,11 +33,11 @@ exports.ListModification = class ListModification {
   }
 
   /**
-    * @method #resolveUser()
+    * @method
     * Resolves the user associated with this entry. This will return a Promise to
     * either load the user from the cache, or look up the user's information.
     *
-    * @return Promise<object>
+    * @return {Promise<object>}
     */
   resolveUser () {
     // TODO Fetch user information from user ID
@@ -46,20 +46,20 @@ exports.ListModification = class ListModification {
   }
 
   /**
-    * @method #handle(object)
+    * @method
     * Applies this modification to the given target
     *
-    * @param target The target to apply to
+    * @param {object} target The target to apply to
     */
   apply (target) {
     return this.handler.handle(this, target)
   }
 
   /**
-    * @method #toString()
+    * @method
     * Serializes this entry back into a string.
     *
-    * @return string
+    * @return {string}
     */
   toString () {
     return `${this.time.getTime()} ${this.handler.command} ${this.user} ${this.data}`
@@ -74,16 +74,16 @@ exports.ListModification.pattern = /^([0-9]+) ([A-Z_]+) ([a-z]+:\d+) (.+)$/
 // -----------------------------------------------------------------------------------------------------
 
 /**
-  * @class ListEntry
+  * @class
   * An entry in a list, modifiable by ListModifications
   */
 exports.ListEntry = class ListEntry {
   /**
-    * @constructor ListEntry(type, title)
+    * @constructor
     * Creates a new entry with the given type and title
     *
-    * @param type The type of entry
-    * @param title The title of this entry
+    * @param {string} type The type of entry
+    * @param {string} title The title of this entry
     */
   constructor (type, title) {
     assert.strictEqual(typeof type, 'string')
@@ -101,12 +101,12 @@ exports.ListEntry = class ListEntry {
   }
 
   /**
-    * @method #appendChange(Date, string, string)
+    * @method
     * Appends a change with the given data to this entry
     *
-    * @param time The time of the change
-    * @param user The user that issued the change
-    * @param type The type of change
+    * @param {Date} time The time of the change
+    * @param {string} user The user that issued the change
+    * @param {string} type The type of change
     */
   appendChange (time, user, type) {
     assert(time instanceof Date, 'time must be a Date')
@@ -117,10 +117,10 @@ exports.ListEntry = class ListEntry {
   }
 
   /**
-    * @method #appendModification(ListModification)
+    * @method
     * Appends a ListModification as a change to this entry
     *
-    * @param mod The modification
+    * @param {ListModification} mod The modification
     */
   appendModification (mod) {
     assert(mod instanceof exports.ListModification, 'modification must be a ListModification')
@@ -132,18 +132,18 @@ exports.ListEntry = class ListEntry {
 // -----------------------------------------------------------------------------------------------------
 
 /**
-  * @class List
+  * @class
   * A list object containing the data to define a list
   */
 exports.List = class List {
   /**
-    * @constructor List(string|undefined, string, object|Array|undefined)
+    * @constructor
     * Creates a new list from the given uuid, title, and users. If the uuid is
     * undefined, a new one will be generated.
     *
-    * @param uuid The UUID
-    * @param title The list title
-    * @param users The users to be added to the list
+    * @param {string} [uuid] The UUID
+    * @param {string} title The list title
+    * @param {object} [users] The users to be added to the list
     */
   /* eslint complexity: [ 'error', 7 ] */
   constructor (uuid, title, users) {
@@ -170,11 +170,11 @@ exports.List = class List {
   }
 
   /**
-    * @method #addModification(ListModification)
+    * @method
     * Adds a modification to this list and re-sorts the modification array
     * to be ordered by timestamp. This is not apply the modifications.
     *
-    * @param mod The modification to add.
+    * @param {ListModification} mod The modification to add.
     */
   addModification (mod) {
     assert(mod instanceof exports.ListModification, 'expected ListModification')
@@ -186,10 +186,10 @@ exports.List = class List {
   }
 
   /**
-    * @method #addEntry(ListEntry)
+    * @method
     * Adds a list entry to this list
     *
-    * @param entry A list entry
+    * @param {ListEntry} entry A list entry
     */
   addEntry (entry) {
     assert(entry instanceof exports.ListEntry, 'expected ListEntry')
@@ -197,10 +197,10 @@ exports.List = class List {
   }
 
   /**
-    * @method #apply(number)
+    * @method
     * Applies the modification at the given index to this list
     *
-    * @param index The modification to apply
+    * @param {number} index The modification to apply
     */
   apply (index) {
     assert(typeof index === 'number', 'expected numerical index, got ' + typeof index)
@@ -212,11 +212,10 @@ exports.List = class List {
   }
 
   /**
-    * @method #applyFrom(number=0)
+    * @method
     * Applies modifications, starting a the given line index, to this list.
     *
-    * @param data The data to apply with
-    * @param index The index to start from
+    * @param {number} index=0 The index to start from
     */
   applyFrom (index = 0) {
     for (let i = index; i < this.modifications.length; i++) {
@@ -230,7 +229,7 @@ exports.List = class List {
   }
 
   /**
-    * @method #reset()
+    * @method
     * Resets all of this list's entries and re-applies all modifications.
     */
   reset () {
@@ -240,10 +239,10 @@ exports.List = class List {
   }
 
   /**
-    * @method #resolveUsers()
+    * @method
     * Returns a promise that resolves with a list of all resolved users
     *
-    * @return Promise<Array<User>>
+    * @return {Promise<Array<User>>}
     */
   resolveUsers () {
     // TODO User resolution
@@ -251,20 +250,20 @@ exports.List = class List {
   }
 
   /**
-    * @method #isShared()
+    * @method
     * Determines if this list is shared (i.e. is has multiple users).
     *
-    * @return boolean
+    * @return {boolean}
     */
   isShared () {
     return this.users.length > 1
   }
 
   /**
-    * @method #toString()
+    * @method
     * Serializes this list into a string.
     *
-    * @return string
+    * @return {string}
     */
   toString () {
     let str = `${this.title}\n${this.users.join(' ')}`
@@ -275,11 +274,11 @@ exports.List = class List {
 }
 
 /**
-  * @function parseList(string, string)
+  * @function
   * Creates a new list from the given data and uuid.
   *
-  * @param uuid The UUID.
-  * @param data The data
+  * @param {string} uuid The UUID.
+  * @param {string} data The data
   * @return List
   */
 exports.List.parseList = (uuid, data) => {

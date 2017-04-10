@@ -18,22 +18,22 @@ class App {
   }
 
   /**
-    * @method #on(string, function)
+    * @method
     * Binds the given event to the given handler
     *
-    * @param eventName The name of the event
-    * @param handler The handler function
+    * @param {string} eventName The name of the event
+    * @param {function} handler The handler function
     */
   on (eventName, handler) {
     $(document).bind(eventName, handler)
   }
 
   /**
-    * @method #emit(string, ?*)
+    * @method
     * Emits an event by the given name, optionally with the given data
     *
-    * @param eventName The name of the event
-    * @param data The data to send
+    * @param {string} eventName The name of the event
+    * @param {*} [data] The data to send
     */
   emit (eventName, data) {
     $(document).trigger(eventName, data)
@@ -64,11 +64,11 @@ class App {
   }
 
   /**
-    * @method #getChangeIconForType(string)
+    * @method
     * Gets the FA icon to be used with the specific type of change.
     *
-    * @param type The type
-    * @return string The icon name, without the 'fa-'
+    * @param {string} type The type
+    * @return {string} The icon name, without the 'fa-'
     */
   getChangeIconForType (type) {
     switch (type) {
@@ -79,20 +79,20 @@ class App {
   }
 
   /**
-    * @method #getActiveListItem()
+    * @method
     * Gets the currently active list item, or -1 if no item is active
     *
-    * @return number The currently active item
+    * @return {number} The currently active item
     */
   getActiveListItem () {
     return Number.parseInt($('#listNode').attr('data-active-item') || '-1', 10)
   }
 
   /**
-    * @method #setActiveListItem(?number)
+    * @method
     * Sets the active list item, or clears the active item if not specified.
     *
-    * @param item The item index to set active
+    * @param {number} [item] The item index to set active
     */
   setActiveListItem (item) {
     const nodes = $('#listNode').find('li > .list-body')
@@ -114,12 +114,12 @@ class App {
   }
 
   /**
-    * @method #renderEntry(List, number)
+    * @method
     * Renders the entry at the given position in the given list. If a rendered element
     * already exists for that entry, it is removed and re-rendered.
     *
-    * @param list The list
-    * @param id The index of the entry
+    * @param {List} list The list
+    * @param {number} id The index of the entry
     */
   renderEntry (list, id) {
     const listNode = $('#listNode')
@@ -160,11 +160,11 @@ class App {
   }
 
   /**
-    * @method #renderList(List)
+    * @method
     * Renders the entire list, clearing any previously-rendered elements from the
     * list node
     *
-    * @param list The List
+    * @param {List} list The List
     */
   renderList (list) {
     $('#listNode').empty()
