@@ -101,3 +101,20 @@
     }
   }
 }
+
+#listOptions {
+  color: $color-gray3;
+  font-size: 25px;
+  padding-top: 20px;
+  text-align: center;
+  width: 100%;
+
+  a {
+    padding: 0 10vw;
+    vertical-align: middle;
+
+    &:nth-child(2) {
+      font-size: 120%;
+    }
+  }
+}
