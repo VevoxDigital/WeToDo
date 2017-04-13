@@ -11,10 +11,11 @@ class App {
 
     // TODO DEBUG
     const list = new List(undefined, 'Example List', 'local:0')
-    list.addModification(new ListModification(`${new Date().getTime() - 1000 * 60} CREATE local:1 note|Example Note`))
-    list.addModification(new ListModification(`${new Date().getTime()} CREATE local:0 note|Another Thing`))
-    list.reset()
     this.activeList = list
+
+    // list.addModification(new ListModification(`${new Date().getTime() - 1000 * 60} CREATE local:1 note|Example Note`))
+    // list.addModification(new ListModification(`${new Date().getTime()} CREATE local:0 note|Another Thing`))
+    // list.reset()
   }
 
   /**
@@ -59,8 +60,42 @@ class App {
     }, 1000 * 20) // every 20 seconds...?
     Object.defineProperty(this, 'templateNode', { value: $('#listTemplateNode') })
 
+    this.bindUIEvents()
+
     // TODO DEBUG
     this.renderList(this.activeList)
+  }
+
+  bindUIEvents () {
+    const prompt = $('#listCreationPrompt')
+
+    // list options create
+    $('#listOptions .fa-plus').click(() => {
+      prompt.show()
+      prompt.find('[type=text]').focus()
+    })
+
+    // confirm list item creation
+    prompt.submit(() => {
+      const input = prompt.find('[type=text]')
+
+      // TODO Prompt for type
+      // TODO Proper user
+      this.activeList.addModification(
+        ListModification.fromData(new Date(), 'CREATE', 'local:0', `note|${input.val() || 'List Item'}`))
+
+      this.activeList.applyLast()
+      this.renderEntry(this.activeList, this.activeList.entries.length - 1)
+      this.setActiveListItem(this.getActiveListItem())
+
+      prompt.find('.fa-close').click()
+    })
+
+    // cancel list item creation
+    prompt.find('.fa-close').click(() => {
+      prompt.find('[type=text]').val('')
+      prompt.hide()
+    })
   }
 
   /**
@@ -101,7 +136,7 @@ class App {
     nodes.find('ul > li:not(:nth-child(1))').hide()
 
     // if 'item' is a number, make that item active
-    if (typeof item === 'number') {
+    if (typeof item === 'number' && item >= 0) {
       const node = $('#listNode').find(`li[data-id=${item}]`)
       node.find('p').show()
       node.find('.list-options').show()

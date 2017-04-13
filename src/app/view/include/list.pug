@@ -22,4 +22,10 @@ section#list
     a.fa.fa-plus(href='javascript:')
     a.fa.fa-cog(href='javascript:')
 
+  form#listCreationPrompt(style='display:none', action='javascript:')
+    input(type='text')
+    input(type='submit' style='display:none')
+    a.fa.fa-check(href='javascript:' onclick='$("#listCreationPrompt").submit()')
+    a.fa.fa-close(href='javascript:')
+
   ul.list#listNode

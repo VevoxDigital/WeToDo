@@ -71,6 +71,15 @@ exports.ListModification = class ListModification {
 // ex: 123456789 CREATE google:123456 CHECK|Example Checklist Item
 exports.ListModification.pattern = /^([0-9]+) ([A-Z_]+) ([a-z]+:\d+) (.+)$/
 
+exports.ListModification.fromData = (time, command, user, data) => {
+  assert.ok(time instanceof Date, 'time should be a Date')
+  assert.strictEqual(typeof command, 'string')
+  assert.strictEqual(typeof user, 'string')
+  assert.strictEqual(typeof data, 'string')
+
+  return new exports.ListModification(`${time.getTime()} ${command} ${user} ${data}`)
+}
+
 // -----------------------------------------------------------------------------------------------------
 
 /**
@@ -209,6 +218,14 @@ exports.List = class List {
     assert(mod, 'unknown modification index')
 
     mod.apply(typeof mod.handler.target === 'number' ? /* istanbul ignore next */ this._entries[mod.handler.target] : this)
+  }
+
+  /**
+    * @method
+    * Applies the most recent modification
+    */
+  applyLast () {
+    this.apply(this.modifications.length - 1)
   }
 
   /**
