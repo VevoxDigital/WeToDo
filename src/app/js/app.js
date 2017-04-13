@@ -67,12 +67,12 @@ class App {
   }
 
   bindUIEvents () {
-    const prompt = $('#listCreationPrompt')
+    const prompt = $('#dialogListPrompt')
 
     // list options create
     $('#listOptions .fa-plus').click(() => {
-      prompt.show()
-      prompt.find('[type=text]').focus()
+      this.showDialog('ListPrompt')
+      prompt.find('[type=text]').val('').focus()
     })
 
     // confirm list item creation
@@ -90,12 +90,14 @@ class App {
 
       prompt.find('.fa-close').click()
     })
+  }
 
-    // cancel list item creation
-    prompt.find('.fa-close').click(() => {
-      prompt.find('[type=text]').val('')
-      prompt.hide()
-    })
+  showDialog (dialog) {
+    $('#dialog' + dialog).show()
+  }
+
+  hideDialog (dialog) {
+    $('#dialog' + dialog).hide()
   }
 
   /**

@@ -1,0 +1,17 @@
+mixin dialog(id, title, icon)
+  dialog(id='dialog' + id)
+    .dialog-title
+      if icon
+        a(class='fa fa-'+icon href='javascript')
+      = ' ' + title
+    .dialog-content
+      block
+
+seciond#dialogs
+  +dialog('ListPrompt', 'New List', 'plus')
+    form(action='javascript:')
+      input(type='text')
+      input(type='submit' style='display:none')
+    .dialog-options
+      a.fa.fa-check(href='javascript:' onclick='$("#dialogListPrompt form").submit()')
+      a.fa.fa-close(href='javascript:' onclick='$("#dialogListPrompt").hide()')
