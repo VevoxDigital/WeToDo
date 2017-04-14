@@ -1,7 +1,7 @@
-#dialogListPrompt {
+#dialogs > dialog {
   background: $color-white1;
   border: 0;
-  box-shadow: 0 0 0 1000vh rgba($color-black, .3), 2px 2px 5px rgba($color-black, .4);
+  box-shadow: 0 0 0 1000vh rgba($color-black, .3);
   color: $color-gray8;
   max-height: 90vh;
   max-width: 70vw;
@@ -13,9 +13,10 @@
   .dialog-title {
     background: $color-black2;
     color: rgba($color-white, .6);
-    font-size: 10pt;
+    font-family: Ubuntu, sans-serif;
+    font-size: 12pt;
     font-weight: bold;
-    padding: 10px;
+    padding: 9px;
     width: 100%;
 
     a {
@@ -24,8 +25,32 @@
     }
   }
 
+  .dialog-close {
+    color: $color-white1;
+    opacity: .5;
+    padding: 10px;
+    position: absolute;
+    right: 0;
+    text-decoration: none;
+    top: 0;
+  }
+
   .dialog-content {
-    padding: 30px;
+    padding: 10px 30px;
     width: 100%;
+
+    .dialog-options {
+      color: $color-gray8;
+      text-align: center;
+      width: 100%;
+
+      a {
+        color: inherit;
+        font-size: 14pt;
+        padding: 0 10px;
+        padding-top: 10px;
+        text-decoration: none;
+      }
+    }
   }
 }

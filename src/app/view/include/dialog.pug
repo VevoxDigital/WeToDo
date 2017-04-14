@@ -4,14 +4,12 @@ mixin dialog(id, title, icon)
       if icon
         a(class='fa fa-'+icon href='javascript')
       = ' ' + title
+    a.dialog-close.fa.fa-close(href='javascript:')
     .dialog-content
       block
 
-seciond#dialogs
-  +dialog('ListPrompt', 'New List', 'plus')
+section#dialogs
+  +dialog('ListPrompt', 'New List')
     form(action='javascript:')
       input(type='text')
-      input(type='submit' style='display:none')
-    .dialog-options
-      a.fa.fa-check(href='javascript:' onclick='$("#dialogListPrompt form").submit()')
-      a.fa.fa-close(href='javascript:' onclick='$("#dialogListPrompt").hide()')
+      input(type='submit' value='Create List')

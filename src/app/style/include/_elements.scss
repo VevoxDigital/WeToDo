@@ -1,0 +1,45 @@
+input {
+  display: block;
+  width: 100%;
+
+  &[type=text] {
+    background: none;
+    border: 4px transparent solid;
+    border-bottom: 2px rgba($color-gray8, .6) solid;
+    color: rgba($color-gray8, .6);
+    font-size: 12pt;
+    margin: 5px;
+    min-width: 50vw;
+    padding: 3px;
+    text-align: center;
+    transition: border 250ms, background 250ms;
+
+    &:hover,
+    &:active,
+    &:focus {
+      background: rgba($color-black, .05);
+      border-bottom-color: rgba(shade($color-blue, 20%), .6);
+      outline: none;
+    }
+  }
+
+  &[type=submit] {
+    background: $color-blue;
+    border: 0;
+    color: $color-white1;
+    cursor: pointer;
+    font-family: Ubuntu, sans-serif;
+    font-weight: bold;
+    margin: 5px auto;
+    padding: 8px;
+    transition: opacity 250ms;
+    width: 50%;
+
+    &:hover,
+    &:active,
+    &:focus {
+      opacity: .8;
+      outline: none;
+    }
+  }
+}

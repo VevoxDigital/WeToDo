@@ -67,12 +67,19 @@ class App {
   }
 
   bindUIEvents () {
+    const self = this
+
     const prompt = $('#dialogListPrompt')
 
     // list options create
     $('#listOptions .fa-plus').click(() => {
       this.showDialog('ListPrompt')
       prompt.find('[type=text]').val('').focus()
+    })
+
+    // dialog closing
+    $('#dialogs .dialog-close').click(function () {
+      self.hideDialog($(this).parent().attr('id').substring(6))
     })
 
     // confirm list item creation
