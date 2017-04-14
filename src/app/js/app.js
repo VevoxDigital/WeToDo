@@ -100,11 +100,18 @@ class App {
   }
 
   showDialog (dialog) {
-    $('#dialog' + dialog).show()
+    $('#dialog' + dialog).css('opacity', 0).show().animate({
+      opacity: 1
+    }, 250)
   }
 
   hideDialog (dialog) {
-    $('#dialog' + dialog).hide()
+    const d = $('#dialog' + dialog)
+    d.animate({
+      opacity: 0
+    }, 250, () => {
+      d.hide()
+    })
   }
 
   /**
