@@ -1,6 +1,7 @@
 #dialogs > dialog {
   background: $color-white1;
   border: 0;
+  border-radius: 5px;
   box-shadow: 0 0 0 1000vh rgba($color-black, .3);
   color: $color-gray8;
   max-height: 90vh;
@@ -12,6 +13,7 @@
 
   .dialog-title {
     background: $color-black2;
+    border-radius: 5px 5px 0 0;
     color: rgba($color-white, .6);
     font-family: Ubuntu, sans-serif;
     font-size: 12pt;

@@ -100,17 +100,29 @@ class App {
   }
 
   showDialog (dialog) {
-    $('#dialog' + dialog).css('opacity', 0).show().animate({
-      opacity: 1
-    }, 250)
+    const d = $('#dialog' + dialog)
+    const { w, h } = { w: d.width(), h: d.height() }
+
+    d.css('opacity', 0)
+      .css('width', w - 100)
+      .css('height', h - 100)
+      .show().velocity({
+        opacity: 1,
+        width: w,
+        height: h
+      }, 500, [500, 30])
   }
 
   hideDialog (dialog) {
     const d = $('#dialog' + dialog)
-    d.animate({
+    d.velocity({
       opacity: 0
-    }, 250, () => {
-      d.hide()
+    }, {
+      duration: 250,
+      complete: () => {
+        d.hide()
+        d.removeAttr('style')
+      }
     })
   }
 
