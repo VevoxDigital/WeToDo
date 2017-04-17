@@ -1,5 +1,15 @@
 #menu {
   background: $color-white1;
-  border-right: 5px $color-black2 solid;
-  padding: 10px;
+}
+
+.menu-header {
+  background-color: $color-black2;
+  color: rgba($color-white1, .6);
+  padding: 15px;
+  width: 100%;
+
+  h1 {
+    font-family: Ubuntu, sans-serif;
+    font-size: 12pt;
+  }
 }
