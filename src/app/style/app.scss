@@ -19,8 +19,19 @@ body {
   }
 }
 
-@import 'include/elements';
+.body-content {
+  display: flex;
+  height: 100vh;
+  position: absolute;
+  width: 200vw;
 
-@import 'include/header';
-@import 'include/list';
+  section {
+    flex: 0 0 100vw;
+  }
+}
+
+@import 'include/elements';
 @import 'include/dialog';
+
+@import 'layout/list';
+@import 'layout/menu';
