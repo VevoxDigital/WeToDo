@@ -1,15 +1,22 @@
 #menu {
-  background: $color-white1;
-}
+  padding: 0 5%;
 
-.menu-header {
-  background-color: $color-black2;
-  color: rgba($color-white1, .6);
-  padding: 15px;
-  width: 100%;
+  button {
+    background: $color-blue;
+    color: $color-white1;
+    padding: 10px 30px;
+    transition: opacity 250ms;
+
+    &:hover,
+    &:active {
+      opacity: .7;
+    }
+  }
 
   h1 {
-    font-family: Ubuntu, sans-serif;
-    font-size: 12pt;
+    border-bottom: 1px $color-gray2 solid;
+    color: $color-gray6;
+    padding: 10px 0;
+    text-align: center;
   }
 }
