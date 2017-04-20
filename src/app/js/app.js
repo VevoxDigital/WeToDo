@@ -60,6 +60,11 @@ class App {
     }, 1000 * 20) // every 20 seconds...?
     Object.defineProperty(this, 'templateNode', { value: $('#listTemplateNode') })
 
+    // bind events
+    $('a[target="_system"]').click(e => {
+      e.preventDefault()
+      window.open($(e.currentTarget).attr('href'), '_system')
+    })
     this.bindUIEvents()
 
     // TODO DEBUG

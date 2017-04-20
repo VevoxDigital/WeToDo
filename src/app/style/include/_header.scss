@@ -39,6 +39,19 @@
       padding-left: 12px;
       vertical-align: middle;
     }
+
+    .nav-right {
+      float: right;
+
+      .nav-icon {
+        padding-right: 50px;
+        width: 0;
+
+        &:last-child {
+          padding-right: 30px;
+        }
+      }
+    }
   }
 
   h1 {

@@ -26,4 +26,5 @@
     <engine name="android" spec="~6.1.2" />
     <plugin name="cordova-plugin-whitelist" spec="1" />
     <plugin name="cordova-plugin-file" spec="~4.3.2" />
+    <plugin name="cordova-plugin-inappbrowser" spec="~1.7.0" />
 </widget>
