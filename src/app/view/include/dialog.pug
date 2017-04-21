@@ -13,3 +13,10 @@ section#dialogs
     form(action='javascript:')
       input(type='text')
       input(type='submit' value='Create List')
+  +dialog('About', 'About ' + app.productName)
+    h1= `${app.productName} v${app.version}`
+    strong TODO Some info needs to be here.
+    
+    hr
+    strong To my Warrior, Half the World Away
+    em Copyright &copy; Matthew Struble, 2017

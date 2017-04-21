@@ -105,8 +105,13 @@ class App {
       prompt.find('.fa-close').click()
     })
 
-    // menu toggle
-    let useLeft = false
+    // about dialog
+    $('#header .fa-info').click(() => {
+      this.showDialog('About')
+    })
+
+    // TODO DEBUG menu toggle
+    let useLeft = true
     $('#header .fa-bars').click(() => {
       this.playShiftAnimation(
         useLeft ? 'Hey There' : 'Hi, User', `UseLeft: ${useLeft}`, useLeft)
