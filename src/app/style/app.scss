@@ -22,11 +22,22 @@ body {
 .body-content {
   display: flex;
   height: calc(100vh - 200px);
+  overflow-y: auto;
   position: absolute;
   width: 200vw;
 
   section {
     flex: 0 0 100vw;
+  }
+
+  .body-cover {
+    background: $color-black1;
+    content: '';
+    height: 0;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
   }
 }
 

@@ -60,6 +60,8 @@ class App {
     }, 1000 * 20) // every 20 seconds...?
     Object.defineProperty(this, 'templateNode', { value: $('#listTemplateNode') })
 
+    Object.defineProperty(this, 'headerHeight', { value: $('#header').height() })
+
     // bind events
     $('a[target="_system"]').click(e => {
       e.preventDefault()
@@ -102,6 +104,14 @@ class App {
 
       prompt.find('.fa-close').click()
     })
+
+    // menu toggle
+    let useLeft = false
+    $('#header .fa-bars').click(() => {
+      this.playShiftAnimation(
+        useLeft ? 'Hey There' : 'Hi, User', `UseLeft: ${useLeft}`, useLeft)
+      useLeft = !useLeft
+    })
   }
 
   showDialog (dialog) {
@@ -127,6 +137,28 @@ class App {
       complete: () => {
         d.hide()
         d.removeAttr('style')
+      }
+    })
+  }
+
+  playShiftAnimation (title, desc, offset) {
+    const duration = 400
+
+    const h1 = $('#headerTitle')
+    const h2 = $('#headerSubtitle')
+    const height = `-${this.headerHeight}px`
+
+    h1.css('top', 0).velocity({ top: height }, duration, [ 250, 20 ])
+    h2.css('top', 0).velocity({ top: height }, duration + 50, [ 250, 20 ])
+
+    $('.body-content').velocity({
+      left: offset ? '-100vw' : 0
+    }, {
+      duration: duration,
+      easing: [ 250, 20 ],
+      complete: () => {
+        h1.html(title).css('top', height).velocity({ top: 0 }, duration, [ 250, 20 ])
+        h2.html(desc).css('top', height).velocity({ top: 0 }, duration + 50, [ 250, 20 ])
       }
     })
   }
