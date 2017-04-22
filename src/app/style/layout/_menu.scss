@@ -19,10 +19,19 @@
     }
   }
 
-  h1 {
-    border-bottom: 1px $color-gray2 solid;
-    color: $color-gray6;
-    padding: 10px 0;
-    text-align: center;
+  .menu-section {
+    h1 {
+      border-bottom: 1px $color-gray2 solid;
+      color: $color-gray6;
+      padding: 10px 0;
+      text-align: center;
+    }
+
+    p {
+      color: $color-gray4;
+      margin: 0;
+      padding: 10px;
+      text-align: center;
+    }
   }
 }
