@@ -3,7 +3,13 @@
 
   button {
     background: $color-blue;
+    border: 0;
     color: $color-white1;
+    cursor: pointer;
+    display: block;
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 10px auto;
     padding: 10px 30px;
     transition: opacity 250ms;
 
