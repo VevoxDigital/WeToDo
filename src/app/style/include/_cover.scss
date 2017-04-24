@@ -1,0 +1,22 @@
+#loadingCover {
+  background: $color-black1;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+
+  img {
+    display: block;
+    height: 30vh;
+    margin: 0 auto;
+    margin-top: 20vh;
+  }
+
+  i {
+    color: $color-white1;
+    display: block;
+    font-size: 30pt;
+    text-align: center;
+  }
+}

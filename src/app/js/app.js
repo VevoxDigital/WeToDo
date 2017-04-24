@@ -1,21 +1,30 @@
 'use strict'
 
 const { List, ListModification } = require('./lib/list')
+const { User } = require('./lib/user')
 
 const ago = require('node-time-ago')
+
+const KEY_USER = 'user'
 
 class App {
   constructor () {
     this.on('init', () => { this.onInit() })
     this.on('deviceready', () => { this.onDeviceReady() })
 
+    this.on('ready', () => { this.onReady() })
+
+    Object.defineProperty(this, 'storage', { value: window.localStorage })
+
     // TODO DEBUG
+    /*
     const list = new List(undefined, 'Example List', 'local:0')
     this.activeList = list
 
-    // list.addModification(new ListModification(`${new Date().getTime() - 1000 * 60} CREATE local:1 note|Example Note`))
-    // list.addModification(new ListModification(`${new Date().getTime()} CREATE local:0 note|Another Thing`))
-    // list.reset()
+    list.addModification(new ListModification(`${new Date().getTime() - 1000 * 60} CREATE local:1 note|Example Note`))
+    list.addModification(new ListModification(`${new Date().getTime()} CREATE local:0 note|Another Thing`))
+    list.reset()
+    */
   }
 
   /**
@@ -42,12 +51,40 @@ class App {
 
   // Fired on 'init' event
   onInit () {
-    console.log('init')
+    console.log('app: init')
   }
 
-  // Fired on 'deviceready' event
   onDeviceReady () {
-    console.log('ready')
+    console.log('app: deviceready')
+
+    const defineUser = uid => {
+      Object.defineProperty(this, 'user', { value: new User(uid) })
+      this.user.resolve().then(() => {
+        this.emit('ready')
+      })
+    }
+
+    const uid = this.storage.getItem(KEY_USER)
+    if (uid) {
+      console.log('Found user: ' + uid)
+      defineUser(uid)
+    } else {
+      console.log('Could not find local user, attempting login')
+
+      // TODO Actually log the user in
+      // DEBUG Create the current user as a local user
+      defineUser('local:1')
+    }
+  }
+
+  // The user is fully loaded (and resolved)
+  // we can now hide the cover and proceed with loading the app
+  onReady () {
+    console.log('app: ready')
+
+    // constants
+    Object.defineProperty(this, 'templateNode', { value: $('#listTemplateNode') })
+    Object.defineProperty(this, 'headerHeight', { value: $('#header').height() })
 
     // set the updater for time ago on list timestamps
     setInterval(() => {
@@ -58,9 +95,6 @@ class App {
         times.html(ago(time - (time % (1000 * 60)))) // only parse to the nearest minute
       })
     }, 1000 * 20) // every 20 seconds...?
-    Object.defineProperty(this, 'templateNode', { value: $('#listTemplateNode') })
-
-    Object.defineProperty(this, 'headerHeight', { value: $('#header').height() })
 
     // bind events
     $('a[target="_system"]').click(e => {
@@ -69,8 +103,16 @@ class App {
     })
     this.bindUIEvents()
 
-    // TODO DEBUG
-    this.renderList(this.activeList)
+    // move the cover out of the way
+    this.playShiftAnimationToHome()
+    $('#loadingCover').velocity({
+      opacity: 0
+    }, {
+      duration: 500,
+      complete: () => {
+        $('#loadingCover').remove()
+      }
+    })
   }
 
   bindUIEvents () {
@@ -109,14 +151,6 @@ class App {
     $('#header .fa-info').click(() => {
       this.showDialog('About')
     })
-
-    // TODO DEBUG menu toggle
-    let useLeft = true
-    $('#header .fa-bars').click(() => {
-      this.playShiftAnimation(
-        useLeft ? 'Hey There' : 'Hi, User', `UseLeft: ${useLeft}`, useLeft)
-      useLeft = !useLeft
-    })
   }
 
   showDialog (dialog) {
@@ -144,6 +178,13 @@ class App {
         d.removeAttr('style')
       }
     })
+  }
+
+  playShiftAnimationToHome () {
+    let name = this.user.data.name
+    name = name.indexOf(' ') > 0 ? name.substring(0, name.indexOf(' ')) : name
+
+    this.playShiftAnimation('Hi, ' + name, 'Unknown Account')
   }
 
   playShiftAnimation (title, desc, offset) {

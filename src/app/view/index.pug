@@ -1,6 +1,10 @@
 extends layout/layout.pug
 
 block body
+  #loadingCover
+    img(src='/resources/media-02.svg')
+    i.fa.fa-cog.fa-spin
+  
   include include/dialog.pug
   include include/header.pug
   
