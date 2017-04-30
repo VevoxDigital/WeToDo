@@ -13,6 +13,10 @@ section#dialogs
     form(action='javascript:')
       input(type='text')
       input(type='submit' value='Create List')
+  +dialog('ListItemPrompt', 'New Item')
+    form(action='javascript:')
+      input(type='text')
+      input(type='submit' value='Create Item')
   +dialog('About', 'About ' + app.productName)
     h1= `${app.productName} v${app.version}`
     strong TODO Some info needs to be here.

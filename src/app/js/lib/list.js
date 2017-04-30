@@ -177,6 +177,10 @@ exports.List = class List {
   get users () {
     return this._users.slice()
   }
+  get updateTime () {
+    // TODO Store creation time somehow
+    return this.modifications.length ? this.modifications.pop().time : new Date()
+  }
 
   /**
     * @method

@@ -3,9 +3,17 @@
 const { List, ListModification } = require('./lib/list')
 const { User } = require('./lib/user')
 
-const ago = require('node-time-ago')
+const _ago = require('node-time-ago')
 
 const KEY_USER = 'user'
+
+const ago = time => {
+  const a = _ago(time)
+
+  // the times are inaccurate by ~20 seconds, so we're just going to ignore
+  // anything less than a minute
+  return a.match(/seconds? ago$/i) ? 'just now' : a
+}
 
 class App {
   constructor () {
@@ -15,6 +23,10 @@ class App {
     this.on('ready', () => { this.onReady() })
 
     Object.defineProperty(this, 'storage', { value: window.localStorage })
+    Object.defineProperty(this, 'lists', { value: new Map() })
+    // TODO Define some property on a list that determines if its "favorited" or not
+
+    // TODO Load lists from disk
 
     // TODO DEBUG
     /*
@@ -92,8 +104,9 @@ class App {
         const times = $(this)
         const time = Number.parseInt(times.attr('data-timestamp'), 10)
 
-        times.html(ago(time - (time % (1000 * 60)))) // only parse to the nearest minute
+        times.html(ago(time))
       })
+      this.renderLists() // re-render lists every time the time should update
     }, 1000 * 20) // every 20 seconds...?
 
     // bind events
@@ -102,6 +115,9 @@ class App {
       window.open($(e.currentTarget).attr('href'), '_system')
     })
     this.bindUIEvents()
+
+    // initial list render
+    this.renderLists()
 
     // move the cover out of the way
     this.playShiftAnimationToHome()
@@ -118,38 +134,58 @@ class App {
   bindUIEvents () {
     const self = this
 
-    const prompt = $('#dialogListPrompt')
-
-    // list options create
-    $('#listOptions .fa-plus').click(() => {
-      this.showDialog('ListPrompt')
-      prompt.find('[type=text]').val('').focus()
-    })
-
     // dialog closing
     $('#dialogs .dialog-close').click(function () {
       self.hideDialog($(this).parent().attr('id').substring(6))
     })
 
-    // confirm list item creation
-    prompt.submit(() => {
-      const input = prompt.find('[type=text]')
+    // new list dialog
+    const newListPrompt = $('#dialogListPrompt')
+    $('#menu > button').click(() => {
+      this.showDialog('ListPrompt')
+      newListPrompt.find('[type=text]').val('').focus()
+    })
+    newListPrompt.submit(() => {
+      const input = newListPrompt.find('[type=text]').val()
+      const list = new List(null, input, this.user.id)
+
+      this.lists.set(list.uuid, list)
+      this.renderLists()
+
+      newListPrompt.find('.fa-close').click()
+    })
+
+    const newItemPrompt = $('#dialogListItemPrompt')
+    $('#listOptions .fa-plus').click(() => {
+      this.showDialog('ListItemPrompt')
+      newItemPrompt.find('[type=text]').val('').focus()
+    })
+    newItemPrompt.submit(() => {
+      const input = newItemPrompt.find('[type=text]')
 
       // TODO Prompt for type
-      // TODO Proper user
       this.activeList.addModification(
-        ListModification.fromData(new Date(), 'CREATE', 'local:0', `note|${input.val() || 'List Item'}`))
+        ListModification.fromData(new Date(), 'CREATE', this.user.id, `note|${input.val() || 'List Item'}`))
 
       this.activeList.applyLast()
       this.renderEntry(this.activeList, this.activeList.entries.length - 1)
       this.setActiveListItem(this.getActiveListItem())
 
-      prompt.find('.fa-close').click()
+      newItemPrompt.find('.fa-close').click()
     })
 
     // about dialog
     $('#header .fa-info').click(() => {
       this.showDialog('About')
+    })
+
+    // return home in list view
+    $('#header .fa-bars').click(() => {
+      if (this.activeList) {
+        this.activeList = undefined
+        this.playShiftAnimationToHome()
+        this.renderEntries()
+      }
     })
   }
 
@@ -312,16 +348,48 @@ class App {
     *
     * @param {List} list The List
     */
-  renderList (list) {
+  renderEntries (list = this.activeList) {
     $('#listNode').empty()
-    $('#listName').html(list.title)
-    $('#listAuthor').html(`created by ${list.users[0]}`) // TODO Resolve this username
+    if (list) {
+      for (let i = 0; i < list.entries.length; i++) {
+        this.renderEntry(list, i)
+      }
 
-    for (let i = 0; i < list.entries.length; i++) {
-      this.renderEntry(list, i)
+      this.setActiveListItem()
     }
+  }
 
-    this.setActiveListItem()
+  /**
+    * @method
+    * Renders the collection of lists, clearing any previously-rendered lists from the menu
+    */
+  renderLists () {
+    const menu = $('#menu')
+    menu.find('ul').hide().empty().prev().hide()
+
+    if (this.lists.size > 0) {
+      menu.find('p').hide()
+      const lists = [...this.lists.values()]
+      lists.sort((a, b) => { return a.updateTime.getTime() - b.updateTime.getTime() })
+
+      for (const list of lists) {
+        // TODO Check if lists are favorited, assign target accordingly
+        const target = $('#menuCategory' + (list.isShared() ? 'Shared' : 'Personal'))
+        target.show().prev().show()
+
+        const node = this.templateNode.find('.list').clone()
+        node.find('h1').html(list.title)
+        node.find('.list-change-time').html(ago(list.updateTime.getTime()))
+
+        node.click(() => {
+          this.activeList = list
+          this.renderEntries()
+          this.playShiftAnimation(list.title, 'created by ' + list.users[0], true)
+        })
+
+        target.append(node)
+      }
+    } else menu.find('p').show()
   }
 }
 
