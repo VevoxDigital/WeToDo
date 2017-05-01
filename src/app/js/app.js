@@ -324,7 +324,7 @@ class App {
     // append all changes
     body.find('ul').empty()
     entry.changes.forEach(change => {
-      const e = this.templateNode.find('.list-change').clone()
+      const e = this.templateNode.find('.list-item .list-change').clone()
       e.find('.list-change-icon').addClass('fa-' + this.getChangeIconForType(change.type))
       e.find('.list-change-user').html(change.user) // TODO Resolve the user
       e.find('.list-change-time').attr('data-timestamp', change.time.getTime()).html(ago(change.time))
@@ -378,6 +378,7 @@ class App {
         target.show().prev().show()
 
         const node = this.templateNode.find('.list').clone()
+        node.find('.list-icon > .fa').addClass(list.isShared() ? 'fa-users' : 'fa-bars')
         node.find('h1').html(list.title)
         node.find('.list-change-time').html(ago(list.updateTime.getTime()))
 
