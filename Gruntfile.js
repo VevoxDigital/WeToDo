@@ -88,7 +88,7 @@ exports = module.exports = grunt => {
       },
       debug: {
         command: 'run',
-        playforms: 'browser'
+        platforms: 'browser'
       }
     },
 

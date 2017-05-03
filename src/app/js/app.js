@@ -2,6 +2,7 @@
 
 const { List, ListModification } = require('./lib/list')
 const { User } = require('./lib/user')
+const data = require('./lib/data')
 
 const _ago = require('node-time-ago')
 
@@ -19,7 +20,7 @@ class App {
   constructor () {
     this.on('init', () => { this.onInit() })
     this.on('deviceready', () => { this.onDeviceReady() })
-
+    this.on('fsready', () => { this.onFSReady() })
     this.on('ready', () => { this.onReady() })
 
     Object.defineProperty(this, 'storage', { value: window.localStorage })
@@ -72,7 +73,7 @@ class App {
     const defineUser = uid => {
       Object.defineProperty(this, 'user', { value: new User(uid) })
       this.user.resolve().then(() => {
-        this.emit('ready')
+        this.emit('fsready')
       })
     }
 
@@ -87,6 +88,18 @@ class App {
       // DEBUG Create the current user as a local user
       defineUser('local:1')
     }
+  }
+
+  onFSReady () {
+    console.log('app: fsready')
+
+    data.getFileSystem().then(() => {
+      console.log('file system granted, looking for lists')
+
+      // this.emit('ready')
+    }).catch(err => {
+      console.error(err)
+    })
   }
 
   // The user is fully loaded (and resolved)
