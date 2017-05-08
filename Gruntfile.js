@@ -65,7 +65,8 @@ exports = module.exports = grunt => {
     'mocha_istanbul': {
       app: {
         options: {
-          root: './src/app/js/lib'
+          root: './src/app/js/lib',
+          istanbulOptions: [ '-x', 'data.js' ]
         },
         src: [ 'test/**/*.js' ]
       }
@@ -147,6 +148,9 @@ exports = module.exports = grunt => {
 
   grunt.registerTask('test', [
     'compile', // we're running the compile task because we're also testing its functionality
+    'retest'
+  ])
+  grunt.registerTask('retest', [
     'mocha_istanbul:app'
   ])
 
