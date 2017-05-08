@@ -26,18 +26,6 @@ class App {
     Object.defineProperty(this, 'storage', { value: window.localStorage })
     Object.defineProperty(this, 'lists', { value: new Map() })
     // TODO Define some property on a list that determines if its "favorited" or not
-
-    // TODO Load lists from disk
-
-    // TODO DEBUG
-    /*
-    const list = new List(undefined, 'Example List', 'local:0')
-    this.activeList = list
-
-    list.addModification(new ListModification(`${new Date().getTime() - 1000 * 60} CREATE local:1 note|Example Note`))
-    list.addModification(new ListModification(`${new Date().getTime()} CREATE local:0 note|Another Thing`))
-    list.reset()
-    */
   }
 
   /**
@@ -95,11 +83,22 @@ class App {
 
     data.getFileSystem().then(() => {
       console.log('file system granted, looking for lists')
+    }).then(data.getListEntries).then(entries => {
+      console.log(`* found ${entries.length} entry(s), attempting to load...`)
 
-      // this.emit('ready')
-    }).catch(err => {
-      console.error(err)
-    })
+      const getList = (entry) => {
+        return data.readList(entry).then(data => {
+          return Promise.resolve(List.parseList(entry.name, data))
+        })
+      }
+
+      const promises = [ ]
+      entries.forEach(entry => { promises.push(getList(entry)) })
+      return Promise.all(promises)
+    }).then(lists => {
+      lists.forEach(list => { if (list) this.lists.set(list.uuid, list) })
+      this.emit('ready')
+    }).catch(console.error)
   }
 
   // The user is fully loaded (and resolved)
@@ -165,6 +164,8 @@ class App {
       this.lists.set(list.uuid, list)
       this.renderLists()
 
+      list.save()
+
       newListPrompt.find('.fa-close').click()
     })
 
@@ -183,6 +184,8 @@ class App {
       this.activeList.applyLast()
       this.renderEntry(this.activeList, this.activeList.entries.length - 1)
       this.setActiveListItem(this.getActiveListItem())
+
+      this.activeList.save()
 
       newItemPrompt.find('.fa-close').click()
     })

@@ -4,6 +4,7 @@ const { handlers } = require('./list-handlers')
 
 const genUuid = require('uuid/v4')
 const assert = require('assert')
+const data = require('./data')
 
 /**
   * @class ListModificationEntry
@@ -291,6 +292,16 @@ exports.List = class List {
     for (const entry of this.modifications) str += `\n${entry.toString()}`
 
     return str
+  }
+
+  /**
+    * @method
+    * Saves this list to disk
+    *
+    * @return {Promise}
+    */
+  save () {
+    return data.saveList(this).catch(console.error)
   }
 }
 

@@ -1,6 +1,6 @@
 'use strict'
 
-const { List } = require('./list')
+const assert = require('assert')
 
 const LIST_DIR = 'lists'
 
@@ -69,46 +69,94 @@ exports.getFileSystem = () => {
   */
 exports.getListDir = () => {
   return new Promise((resolve, reject) => {
-    exports.fs.root.getDirectory('lists', { create: true }, resolve, _handle(reject))
+    exports.fs.root.getDirectory(LIST_DIR, { create: true }, resolve, _handle(reject))
   })
 }
 
 /**
   * @function
-  * Reads the list from the given uuid, returning `undefined` if not found.
-  * Note that this does not create a list from the data, but only reads it.
+  * Gets an Array of FileEntries representing the lists in the list directory.
   *
-  * @param {string} uuid The UUID of the list.
-  * @return {Promise<string>}
+  * @return {Promise<Array<FileEntry>>}
   */
-exports.readList = uuid => {
+exports.getListEntries = () => {
   return exports.getListDir().then(dir => {
     return new Promise((resolve, reject) => {
-      // get the FileEntry from the dir, resolving empty if not found
-      dir.getFile(uuid, { }, fileEntry => {
-        // create a file objects from the entry and read its contents
-        fileEntry.file(file => {
-          resolve(new window.FileReader().readAsText(file))
-        }, _handle(reject))
-      }, err => {
-        if (err.code === window.FileError.NOT_FOUND_ERR) resolve()
-        else reject(exports.fileErrorHandler(err))
-      })
+      const reader = dir.createReader()
+      let entries = []
+
+      const read = () => {
+        reader.readEntries(results => {
+          if (results.length) {
+            entries = entries.concat(Array.prototype.slice.call(results, 0))
+            read()
+          } else resolve(entries.sort())
+        })
+      }
+      read()
     })
   })
 }
 
 /**
-  * @function getList(string)
-  * Gets the List from the given uuid, returing `undefined` if not found.
+  * @function
+  * Reads the list from the given uuid or FileEntry, returning `undefined` if not found.
+  * Note that this does not create a list from the data, but only reads it.
   *
-  * @param uuid The UUID of the list.
-  * @return Promise<List>
+  * @param {string|FileEntry} entry The UUID or entry of the list.
+  * @return {Promise<string>}
   */
-exports.getList = uuid => {
-  return exports.readList().then(data => {
-    if (!data) return
+exports.readList = entry => {
+  assert.ok(typeof entry === 'string' || entry.constructor.name === 'FileEntry',
+    `expected string or FileEntry, got ${entry.constructor.name}`)
 
-    return new List(data, uuid)
+  const read = (fileEntry, resolve, reject) => {
+    fileEntry.file(file => {
+      const reader = new window.FileReader()
+
+      reader.onloadend = function () {
+        resolve(this.result)
+      }
+
+      reader.readAsText(file)
+    }, _handle(reject))
+  }
+
+  return exports.getListDir().then(dir => {
+    return new Promise((resolve, reject) => {
+      if (typeof entry === 'string') {
+        // get the FileEntry from the dir, resolving empty if not found
+        dir.getFile(entry, { }, fileEntry => {
+          // create a file objects from the entry and read its contents
+          read(fileEntry, resolve, reject)
+        }, err => {
+          if (err.code === window.FileError.NOT_FOUND_ERR) resolve()
+          else reject(exports.fileErrorHandler(err))
+        })
+      } else read(entry, resolve, reject)
+    })
+  })
+}
+
+/**
+  * @function
+  * Saves the given List to the file system
+  *
+  * @param {List} list The list to save
+  * @return {Promise}
+  */
+exports.saveList = list => {
+  assert.ok(list.constructor && list.constructor.name === 'List', `expected List, got ${list.constructor.name}`)
+  return exports.getListDir().then(dir => {
+    return new Promise((resolve, reject) => {
+      dir.getFile(list.uuid, { create: true }, fileEntry => {
+        fileEntry.createWriter(fileWriter => {
+          // we have a FileWriter, we'll be writing List#toString() to it
+          fileWriter.onwriteend = resolve
+          fileWriter.onerror = reject
+          fileWriter.write(new window.Blob([ list.toString() ], { type: 'text/plain' }))
+        }, _handle(reject))
+      }, _handle(reject))
+    })
   })
 }
