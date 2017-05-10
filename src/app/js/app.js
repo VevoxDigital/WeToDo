@@ -337,6 +337,15 @@ class App {
       if (!$(e.target).is('a')) this.setActiveListItem(this.getActiveListItem() !== id && id)
     })
 
+    // attach events to item options
+    body.find('.list-options > .fa-close').click(() => {
+      this.activeList.addModification(ListModification.fromData(new Date(), 'DELETE', this.user.id, item.attr('data-id')))
+      this.activeList.applyLast()
+      this.activeList.save()
+
+      this.renderEntries()
+    })
+
     // append all changes
     body.find('ul').empty()
     entry.changes.forEach(change => {

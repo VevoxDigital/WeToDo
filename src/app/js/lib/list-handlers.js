@@ -37,6 +37,19 @@ class CreateCommandHandler extends ListCommandHandler {
   }
 }
 
+class DeleteCommandHandler extends ListCommandHandler {
+  constructor () {
+    super('DELETE')
+  }
+
+  handle (mod, list) {
+    super.handle(mod, list)
+
+    list._entries.splice(Number.parseInt(mod.data, 10), 1)
+  }
+}
+
 exports.handlers = {
-  CREATE: new CreateCommandHandler()
+  CREATE: new CreateCommandHandler(),
+  DELETE: new DeleteCommandHandler()
 }
