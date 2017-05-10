@@ -2,6 +2,8 @@
 
 const { List, ListModification } = require('./lib/list')
 const { User } = require('./lib/user')
+const { handlers } = require('./lib/list-handlers')
+
 const data = require('./lib/data')
 
 const _ago = require('node-time-ago')
@@ -169,6 +171,26 @@ class App {
       newListPrompt.find('.fa-close').click()
     })
 
+    // list edit dialog
+    const editListPrompt = $('#dialogListEditPrompt')
+    $('#listOptions .fa-cog').click(() => {
+      if (!this.activeList) return
+      this.showDialog('ListEditPrompt')
+      editListPrompt.find('[type=text]').val(this.activeList.title).focus()
+    })
+    editListPrompt.submit(() => {
+      const input = editListPrompt.find('[type=text]')
+
+      this.activeList.addModification(ListModification.fromData(new Date(), handlers.LISTRENAME.command, this.user.id, input.val()))
+      this.activeList.applyLast()
+      this.activeList.save()
+      this.renderLists()
+
+      editListPrompt.find('.fa-close').click()
+      this.playShiftAnimation(this.activeList.title, $('#headerSubtitle').html(), true)
+    })
+
+    // new list item dialog
     const newItemPrompt = $('#dialogListItemPrompt')
     $('#listOptions .fa-plus').click(() => {
       this.showDialog('ListItemPrompt')
@@ -179,7 +201,7 @@ class App {
 
       // TODO Prompt for type
       this.activeList.addModification(
-        ListModification.fromData(new Date(), 'CREATE', this.user.id, `note|${input.val() || 'List Item'}`))
+        ListModification.fromData(new Date(), handlers.CREATE.command, this.user.id, `note|${input.val() || 'List Item'}`))
 
       this.activeList.applyLast()
       this.renderEntry(this.activeList, this.activeList.entries.length - 1)

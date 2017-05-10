@@ -9,14 +9,29 @@ mixin dialog(id, title, icon)
       block
 
 section#dialogs
+  //- New list
   +dialog('ListPrompt', 'New List')
     form(action='javascript:')
       input(type='text')
       input(type='submit' value='Create List')
+        
+  //- Edit list
+  +dialog('ListEditPrompt', 'Edit List')
+    form(action='javascript:')
+      input(type='text')
+      input(type='submit' value='Rename')
+    hr
+    .dialog-options
+      a.fa.fa-close(href='javascript:')
+      a.fa.fa-share(href='javascript:')
+  
+  //- New list item
   +dialog('ListItemPrompt', 'New Item')
     form(action='javascript:')
       input(type='text')
       input(type='submit' value='Create Item')
+  
+  //- About
   +dialog('About', 'About ' + app.productName)
     h1= `${app.productName} v${app.version}`
     strong TODO Some info needs to be here.

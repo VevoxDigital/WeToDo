@@ -49,7 +49,21 @@ class DeleteCommandHandler extends ListCommandHandler {
   }
 }
 
+class RenameListCommandHandler extends ListCommandHandler {
+  constructor () {
+    super('LISTRENAME')
+  }
+
+  handle (mod, list) {
+    super.handle(mod, list)
+
+    list.title = mod.data
+  }
+}
+
 exports.handlers = {
+  LISTRENAME: new RenameListCommandHandler(),
+
   CREATE: new CreateCommandHandler(),
   DELETE: new DeleteCommandHandler()
 }
