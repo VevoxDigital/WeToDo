@@ -118,7 +118,7 @@ class App {
         const times = $(this)
         const time = Number.parseInt(times.attr('data-timestamp'), 10)
 
-        times.html(ago(time))
+        times.text(ago(time))
       })
       this.renderLists() // re-render lists every time the time should update
     }, 1000 * 20) // every 20 seconds...?
@@ -187,7 +187,7 @@ class App {
       this.renderLists()
 
       editListPrompt.find('.fa-close').click()
-      this.playShiftAnimation(this.activeList.title, $('#headerSubtitle').html(), true)
+      this.playShiftAnimation(this.activeList.title, $('#headerSubtitle').text(), true)
     })
 
     // new list item dialog
@@ -277,8 +277,8 @@ class App {
       duration: duration,
       easing: [ 250, 20 ],
       complete: () => {
-        h1.html(title).css('top', height).velocity({ top: 0 }, duration, [ 250, 20 ])
-        h2.html(desc).css('top', height).velocity({ top: 0 }, duration + 50, [ 250, 20 ])
+        h1.text(title).css('top', height).velocity({ top: 0 }, duration, [ 250, 20 ])
+        h2.text(desc).css('top', height).velocity({ top: 0 }, duration + 50, [ 250, 20 ])
       }
     })
   }
@@ -354,7 +354,7 @@ class App {
     const body = item.find('.list-body')
 
     // set title and click event for item activity
-    body.find('h1').html(entry.title)
+    body.find('h1').text(entry.title)
     body.click(e => {
       if (!$(e.target).is('a')) this.setActiveListItem(this.getActiveListItem() !== id && id)
     })
@@ -373,8 +373,8 @@ class App {
     entry.changes.forEach(change => {
       const e = this.templateNode.find('.list-item .list-change').clone()
       e.find('.list-change-icon').addClass('fa-' + this.getChangeIconForType(change.type))
-      e.find('.list-change-user').html(change.user) // TODO Resolve the user
-      e.find('.list-change-time').attr('data-timestamp', change.time.getTime()).html(ago(change.time))
+      e.find('.list-change-user').text(change.user) // TODO Resolve the user
+      e.find('.list-change-time').attr('data-timestamp', change.time.getTime()).text(ago(change.time))
       e.appendTo(body.find('ul'))
     })
 
@@ -426,8 +426,8 @@ class App {
 
         const node = this.templateNode.find('.list').clone()
         node.find('.list-icon > .fa').addClass(list.isShared() ? 'fa-users' : 'fa-bars')
-        node.find('h1').html(list.title)
-        node.find('.list-change-time').html(ago(list.updateTime.getTime()))
+        node.find('h1').text(list.title)
+        node.find('.list-change-time').text(ago(list.updateTime.getTime()))
 
         node.click(() => {
           this.activeList = list
