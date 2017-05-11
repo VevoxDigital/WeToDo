@@ -42,16 +42,18 @@
     width: 100%;
 
     .dialog-options {
-      color: $color-gray8;
+      color: $color-gray4;
+      padding: 10px 0;
       text-align: center;
       width: 100%;
 
       a {
         color: inherit;
-        font-size: 14pt;
+        font-size: 16pt;
         padding: 0 10px;
-        padding-top: 10px;
         text-decoration: none;
+
+        &.fa-user { font-size: 14pt; }
       }
     }
   }
