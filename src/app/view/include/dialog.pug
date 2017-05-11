@@ -21,7 +21,7 @@ section#dialogs
       input(type='text')
       input(type='submit' value='Rename')
     .dialog-options
-      a.fa.fa-minus(href='javascript:')
+      a.fa.fa-close(href='javascript:')
       a.fa.fa-users(href='javascript:')
   
   //- New list item
@@ -29,6 +29,13 @@ section#dialogs
     form(action='javascript:')
       input(type='text')
       input(type='submit' value='Create Item')
+  
+  //- Confirmation
+  +dialog('Confirm', 'Confirm Action')
+    p.text-center.target Confirm action?
+    .text-center
+      a.btn.btn-confirm(href='javascript:') Confirm
+      a.btn.btn-cancel(href='javascript:') Cancel
   
   //- About
   +dialog('About', 'About ' + app.productName)

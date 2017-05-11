@@ -153,6 +153,13 @@ class App {
       self.hideDialog($(this).parent().attr('id').substring(6))
     })
 
+    // confirmation dialog
+    const dialogConfirm = $('#dialogConfirm')
+    dialogConfirm.find('.dialog-close').click(() => {
+      dialogConfirm.find('.btn-confirm').unbind('click')
+    })
+    dialogConfirm.find('.btn-cancel').click(dialogConfirm.find('.dialog-close').click)
+
     // new list dialog
     const newListPrompt = $('#dialogListPrompt')
     $('#menu > button').click(() => {
@@ -168,13 +175,13 @@ class App {
 
       list.save()
 
-      newListPrompt.find('.fa-close').click()
+      newListPrompt.find('.dialog-close').click()
     })
 
     // list edit dialog
     const editListPrompt = $('#dialogListEditPrompt')
     $('#listOptions .fa-cog').click(() => {
-      if (!this.activeList) return
+      if (!this.activeList || this.activeList.users[0] !== this.user.id) return
       this.showDialog('ListEditPrompt')
       editListPrompt.find('[type=text]').val(this.activeList.title).focus()
     })
@@ -186,8 +193,16 @@ class App {
       this.activeList.save()
       this.renderLists()
 
-      editListPrompt.find('.fa-close').click()
+      editListPrompt.find('.dialog-close').click()
       this.playShiftAnimation(this.activeList.title, $('#headerSubtitle').text(), true)
+    })
+    editListPrompt.find('.dialog-options > .fa-close').click(() => {
+      editListPrompt.find('.dialog-close').click()
+      this.promptForConfirmation('Really delete this list? This action cannot be undone!', () => {
+        data.deleteList(this.activeList.uuid)
+        this.activeList = undefined
+        this.playShiftAnimationToHome()
+      })
     })
 
     // new list item dialog
@@ -209,7 +224,7 @@ class App {
 
       this.activeList.save()
 
-      newItemPrompt.find('.fa-close').click()
+      newItemPrompt.find('.dialog-close').click()
     })
 
     // about dialog
@@ -252,6 +267,16 @@ class App {
         d.removeAttr('style')
       }
     })
+  }
+
+  promptForConfirmation (message, cb) {
+    const dialog = $('#dialogConfirm')
+    dialog.find('.target').text(message)
+    dialog.find('.btn-confirm').click(() => {
+      dialog.find('.dialog-close').click()
+      cb()
+    })
+    this.showDialog('Confirm')
   }
 
   playShiftAnimationToHome () {

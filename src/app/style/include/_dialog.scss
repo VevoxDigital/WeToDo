@@ -47,6 +47,18 @@
       text-align: center;
       width: 100%;
 
+      h1,
+      h2,
+      p {
+        color: $color-black1;
+        margin: 0;
+        padding: 10px 0;
+      }
+
+      h1 { font-size: 18pt; }
+      h2 { font-size: 16pt; }
+      h3 { font-size: 14pt; }
+
       a {
         color: inherit;
         font-size: 16pt;

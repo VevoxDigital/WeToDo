@@ -160,3 +160,7 @@ exports.saveList = list => {
     })
   })
 }
+
+exports.deleteList = uuid => {
+  console.log(`delete ${uuid}`)
+}

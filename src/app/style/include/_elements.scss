@@ -22,24 +22,42 @@ input {
       outline: none;
     }
   }
+}
 
-  &[type=submit] {
-    background: $color-blue;
-    border: 0;
-    color: $color-white1;
-    cursor: pointer;
-    font-family: Ubuntu, sans-serif;
-    font-weight: bold;
-    margin: 5px auto;
-    padding: 8px;
-    transition: opacity 250ms;
-    width: 50%;
+[type=submit],
+.btn {
+  background: $color-blue;
+  border: 0;
+  color: $color-white1;
+  cursor: pointer;
+  font-family: Ubuntu, sans-serif;
+  font-weight: bold;
+  margin: 5px auto;
+  padding: 8px;
+  text-decoration: none;
+  transition: opacity 250ms;
+  width: 50%;
 
-    &:hover,
-    &:active,
-    &:focus {
-      opacity: .8;
-      outline: none;
-    }
+  &:hover,
+  &:active,
+  &:focus {
+    opacity: .8;
+    outline: none;
   }
 }
+
+.btn.btn-confirm {
+  background: $color-bluegreen1;
+}
+
+// scss-lint:disable QualifyingElement
+a.btn {
+  display: inline-block;
+  margin: 0 4px;
+  padding: 8px 15px;
+  width: auto;
+}
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
