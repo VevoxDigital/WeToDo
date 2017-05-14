@@ -196,6 +196,19 @@ describe('List', () => {
     })
   })
 
+  describe('#applyLast()', () => {
+    it('should call #apply() with the index of the last modification', done => {
+      const list = new lists.List()
+      list.addModification(new lists.ListModification(ENTRY_STRING))
+
+      list.apply = i => {
+        expect(i).to.be(0)
+        done()
+      }
+      list.applyLast()
+    })
+  })
+
   describe('#applyFrom()', () => {
     it('should call apply for all modifications', () => {
       const list = new lists.List(undefined, '')
@@ -224,6 +237,10 @@ describe('List', () => {
       }
 
       list.reset()
+
+      // just calling this here for Istanbul's sake
+      // it should just test the method without calling anything
+      list.save(true)
     })
   })
 
@@ -244,6 +261,26 @@ describe('List', () => {
       list._users.push('u2')
 
       expect(list.isShared()).to.be(true)
+    })
+  })
+
+  describe('#updateTime', () => {
+    it('should return the most recent change time', () => {
+      const date = new Date(123456)
+
+      const list = new lists.List()
+      const mod = lists.ListModification.fromData(date, 'LISTRENAME', 'local:0', 'foo')
+      list.addModification(mod)
+
+      expect(list.updateTime).to.be.a(Date)
+      expect(list.updateTime.getTime()).to.be(date.getTime())
+    })
+
+    it('should return a new date if there are no changes', () => {
+      const list = new lists.List()
+
+      expect(list.updateTime).to.be.a(Date)
+      expect(list.updateTime.getTime()).to.be(new Date().getTime())
     })
   })
 

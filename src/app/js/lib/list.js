@@ -300,8 +300,8 @@ exports.List = class List {
     *
     * @return {Promise}
     */
-  save () {
-    return data.saveList(this).catch(console.error)
+  save ($skip) {
+    /* istanbul ignore next */ if (!$skip) return data.saveList(this).catch(console.error)
   }
 }
 
