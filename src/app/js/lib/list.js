@@ -21,7 +21,7 @@ exports.ListModification = class ListModification {
     if (typeof data !== 'string') throw new Error('expected string data, got ' + typeof data)
 
     let obj = exports.ListModification.pattern.exec(data)
-    if (!obj) throw new Error('bad entry line: ' + obj)
+    if (!obj) throw new Error('bad entry line: ' + data)
 
     Object.defineProperty(this, 'time', { value: new Date(Number.parseInt(obj[1], 10)), enumerable: true })
     Object.defineProperty(this, 'user', { value: obj[3], enumerable: true })
