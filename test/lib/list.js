@@ -280,7 +280,7 @@ describe('List', () => {
       const list = new lists.List()
 
       expect(list.updateTime).to.be.a(Date)
-      expect(list.updateTime.getTime()).to.be(new Date().getTime())
+      expect(new Date().getTime() - list.updateTime.getTime()).to.be.lessThan(10)
     })
   })
 
