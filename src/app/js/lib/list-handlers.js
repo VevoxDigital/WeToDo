@@ -10,14 +10,9 @@ class ListCommandHandler {
     Object.defineProperty(this, 'command', { value: command, enumerable: true })
   }
 
-  handle (mod) {
+  handle (mod, list) {
     /* istanbul ignore next */
-    if (typeof window !== 'undefined') console.log(`${this.command}: ${this.target || 'LIST'} ${mod.data}`)
-  }
-
-  // an 'undefined' target will target the whole list
-  get target () {
-    return undefined
+    if (typeof window !== 'undefined') console.log(`${this.command}@${list.uuid}: ${mod.data}`)
   }
 }
 
@@ -49,6 +44,21 @@ class DeleteCommandHandler extends ListCommandHandler {
   }
 }
 
+class CheckCommandHandler extends ListCommandHandler {
+  constructor () {
+    super('CHECK')
+  }
+
+  handle (mod, list) {
+    super.handle(mod, list)
+
+    const entry = list.entries[Number.parseInt(mod.data, 10)]
+    entry.checked = !entry.checked
+
+    entry.appendChange(mod.time, mod.user, entry.checked ? 'CHECK' : 'UNCHECK')
+  }
+}
+
 class RenameListCommandHandler extends ListCommandHandler {
   constructor () {
     super('LISTRENAME')
@@ -65,5 +75,6 @@ exports.handlers = {
   LISTRENAME: new RenameListCommandHandler(),
 
   CREATE: new CreateCommandHandler(),
-  DELETE: new DeleteCommandHandler()
+  DELETE: new DeleteCommandHandler(),
+  CHECK: new CheckCommandHandler()
 }

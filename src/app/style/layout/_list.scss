@@ -41,6 +41,10 @@
           margin: auto;
         }
       }
+
+      .fa-check {
+        background: $color-blue;
+      }
     }
 
     > .list-body {
@@ -75,6 +79,10 @@
           .list-change-icon {
             font-size: 80%;
             opacity: .7;
+
+            &.fa-check {
+              color: $color-blue;
+            }
           }
 
           .list-change-user {

@@ -216,7 +216,7 @@ class App {
 
       // TODO Prompt for type
       this.activeList.addModification(
-        ListModification.fromData(new Date(), handlers.CREATE.command, this.user.id, `note|${input.val() || 'List Item'}`))
+        ListModification.fromData(new Date(), handlers.CREATE.command, this.user.id, `check|${input.val() || 'List Item'}`))
 
       this.activeList.applyLast()
       this.renderEntry(this.activeList, this.activeList.entries.length - 1)
@@ -318,6 +318,8 @@ class App {
   getChangeIconForType (type) {
     switch (type) {
       case 'CREATE': return 'plus'
+      case 'CHECK': return 'check'
+      case 'UNCHECK': return 'minus'
 
       default: return 'question'
     }
@@ -376,6 +378,30 @@ class App {
     item.addClass('list-item-' + entry.type)
     item.attr('data-id', id)
 
+    const icon = item.find('.list-icon > a')
+    switch (entry.type) {
+      case 'check':
+        icon.addClass('fa-minus')
+        break
+      case 'rule':
+        // TODO
+        break
+      default:
+        icon.addClass('fa-ellipsis-v')
+    }
+    const checkIconUpdate = () => {
+      if (entry.checked) icon.addClass('fa-check').removeClass('fa-minus')
+      else icon.removeClass('fa-check').addClass('fa-minus')
+    }
+    checkIconUpdate()
+    icon.click(() => {
+      this.activeList.addModification(ListModification.fromData(new Date(), handlers.CHECK.command, this.user.id, item.attr('data-id')))
+      this.activeList.applyLast()
+      this.activeList.save()
+
+      checkIconUpdate()
+    })
+
     const body = item.find('.list-body')
 
     // set title and click event for item activity
@@ -386,7 +412,7 @@ class App {
 
     // attach events to item options
     body.find('.list-options > .fa-close').click(() => {
-      this.activeList.addModification(ListModification.fromData(new Date(), 'DELETE', this.user.id, item.attr('data-id')))
+      this.activeList.addModification(ListModification.fromData(new Date(), handlers.DELETE.command, this.user.id, item.attr('data-id')))
       this.activeList.applyLast()
       this.activeList.save()
 
@@ -400,7 +426,7 @@ class App {
       e.find('.list-change-icon').addClass('fa-' + this.getChangeIconForType(change.type))
       e.find('.list-change-user').text(change.user) // TODO Resolve the user
       e.find('.list-change-time').attr('data-timestamp', change.time.getTime()).text(ago(change.time))
-      e.appendTo(body.find('ul'))
+      e.prependTo(body.find('ul'))
     })
 
     // insert the item into the proper spot
