@@ -1,4 +1,7 @@
 #menu {
+  overflow-y: scroll;
+  padding-bottom: 10px;
+
   button {
     background: $color-blue;
     border: 0;
