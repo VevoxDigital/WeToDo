@@ -382,6 +382,8 @@ class App {
     item.addClass('list-item-' + entry.type)
     item.attr('data-id', id)
 
+    const body = item.find('.list-body')
+
     const icon = item.find('.list-icon > a')
     switch (entry.type) {
       case 'check':
@@ -394,19 +396,21 @@ class App {
         icon.addClass('fa-ellipsis-v')
     }
     const checkIconUpdate = () => {
+      if (!item.is('.list-item-check')) return
       if (entry.checked) icon.addClass('fa-check').removeClass('fa-minus')
       else icon.removeClass('fa-check').addClass('fa-minus')
     }
     checkIconUpdate()
     icon.click(() => {
+      if (!item.is('.list-item-check')) return
+
       this.activeList.addModification(ListModification.fromData(new Date(), handlers.CHECK.command, this.user.id, item.attr('data-id')))
       this.activeList.applyLast()
       this.activeList.save()
+      this.renderEntryChanges(entry, body)
 
       checkIconUpdate()
     })
-
-    const body = item.find('.list-body')
 
     // set title and click event for item activity
     body.find('h1').text(entry.title)
@@ -424,14 +428,7 @@ class App {
     })
 
     // append all changes
-    body.find('ul').empty()
-    entry.changes.forEach(change => {
-      const e = this.templateNode.find('.list-item .list-change').clone()
-      e.find('.list-change-icon').addClass('fa-' + this.getChangeIconForType(change.type))
-      e.find('.list-change-user').text(change.user) // TODO Resolve the user
-      e.find('.list-change-time').attr('data-timestamp', change.time.getTime()).text(ago(change.time))
-      e.prependTo(body.find('ul'))
-    })
+    this.renderEntryChanges(entry, body)
 
     // insert the item into the proper spot
     const items = listNode.children('li')
@@ -441,6 +438,19 @@ class App {
     } else {
       listNode.append(item)
     }
+  }
+
+  renderEntryChanges (entry, body) {
+    body.find('ul').empty()
+    entry.changes.forEach(change => {
+      const e = this.templateNode.find('.list-item .list-change').clone()
+      e.find('.list-change-icon').addClass('fa-' + this.getChangeIconForType(change.type))
+      e.find('.list-change-user').text(change.user) // TODO Resolve the user
+      e.find('.list-change-time').attr('data-timestamp', change.time.getTime()).text(ago(change.time))
+      e.prependTo(body.find('ul'))
+    })
+
+    this.setActiveListItem()
   }
 
   /**
