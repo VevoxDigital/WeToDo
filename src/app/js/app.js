@@ -200,7 +200,10 @@ class App {
       editListPrompt.find('.dialog-close').click()
       this.promptForConfirmation('Really delete this list? This action cannot be undone!', () => {
         data.deleteList(this.activeList.uuid)
+        this.lists.remove(this.activeList.uuid)
         this.activeList = undefined
+
+        this.renderLists()
         this.playShiftAnimationToHome()
       })
     })
