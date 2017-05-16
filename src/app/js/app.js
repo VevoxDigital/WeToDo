@@ -168,7 +168,7 @@ class App {
     })
     newListPrompt.submit(() => {
       const input = newListPrompt.find('[type=text]').val()
-      const list = new List(null, input, this.user.id)
+      const list = new List(null, input || 'List', this.user.id)
 
       this.lists.set(list.uuid, list)
       this.renderLists()
@@ -188,7 +188,7 @@ class App {
     editListPrompt.submit(() => {
       const input = editListPrompt.find('[type=text]')
 
-      this.activeList.addModification(ListModification.fromData(new Date(), handlers.LISTRENAME.command, this.user.id, input.val()))
+      this.activeList.addModification(ListModification.fromData(new Date(), handlers.LISTRENAME.command, this.user.id, input.val() || 'List'))
       this.activeList.applyLast()
       this.activeList.save()
       this.renderLists()
