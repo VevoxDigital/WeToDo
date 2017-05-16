@@ -162,5 +162,13 @@ exports.saveList = list => {
 }
 
 exports.deleteList = uuid => {
-  console.log(`delete ${uuid}`)
+  assert.strictEqual(typeof uuid, 'string')
+
+  return exports.getListDir().then(dir => {
+    return new Promise((resolve, reject) => {
+      dir.getFile(uuid, { }, fileEntry => {
+        fileEntry.remove(resolve, _handle(reject))
+      }, _handle(reject))
+    })
+  })
 }
