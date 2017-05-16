@@ -211,12 +211,9 @@ class App {
       this.showDialog('ListItemPrompt')
       newItemPrompt.find('[type=text]').val('').focus()
     })
-    newItemPrompt.submit(() => {
-      const input = newItemPrompt.find('[type=text]')
-
-      // TODO Prompt for type
+    const addListItem = (type, val) => {
       this.activeList.addModification(
-        ListModification.fromData(new Date(), handlers.CREATE.command, this.user.id, `check|${input.val() || 'List Item'}`))
+        ListModification.fromData(new Date(), handlers.CREATE.command, this.user.id, `${type}|${val || 'Item'}`))
 
       this.activeList.applyLast()
       this.renderEntry(this.activeList, this.activeList.entries.length - 1)
@@ -225,6 +222,13 @@ class App {
       this.activeList.save()
 
       newItemPrompt.find('.dialog-close').click()
+    }
+    const input = newItemPrompt.find('[type=text]')
+    newItemPrompt.submit(() => {
+      addListItem('check', input.val())
+    })
+    newItemPrompt.find('.dialog-options > a').click(function () {
+      addListItem($(this).attr('data-type'), input.val())
     })
 
     // about dialog

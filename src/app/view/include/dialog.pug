@@ -29,6 +29,9 @@ section#dialogs
     form(action='javascript:')
       input(type='text')
       input(type='submit' value='Create Item')
+    .dialog-options
+      a(href='javascript:' data-type='note') New Note
+      a(href='javascript:' data-type='rule') New Divider
   
   //- Confirmation
   +dialog('Confirm', 'Confirm Action')

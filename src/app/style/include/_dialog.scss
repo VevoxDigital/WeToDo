@@ -60,10 +60,21 @@
       h3 { font-size: 14pt; }
 
       a {
-        color: inherit;
-        font-size: 16pt;
-        padding: 0 10px;
+        color: $color-blue;
+        font-size: 10pt;
+        padding: 0 5px;
         text-decoration: none;
+        transition: opacity 250ms;
+
+        &:hover {
+          opacity: .7;
+        }
+
+        &.fa {
+          color: inherit;
+          font-size: 16pt;
+          padding: 0 10px;
+        }
 
         &.fa-user { font-size: 14pt; }
       }
