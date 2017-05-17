@@ -81,6 +81,10 @@ exports.ListModification.fromData = (time, command, user, data) => {
   return new exports.ListModification(`${time.getTime()} ${command} ${user} ${data}`)
 }
 
+exports.ListModification.create = (command, user, data) => {
+  return exports.ListModification.fromData(new Date(), command, user.id, data)
+}
+
 // -----------------------------------------------------------------------------------------------------
 
 /**
@@ -197,6 +201,18 @@ exports.List = class List {
     this._mods.sort((a, b) => {
       return a.time.getTime() - b.time.getTime()
     })
+  }
+
+  /**
+    * @method
+    * Appends the given modification, applies the most recent, and saves the list
+    *
+    * @param {ListModification} mod The modification to add.
+    */
+  modifyAndSave (mod) {
+    this.addModification(mod)
+    this.applyLast()
+    this.save()
   }
 
   /**

@@ -4,6 +4,7 @@ const { List, ListModification } = require('./lib/list')
 const { User } = require('./lib/user')
 const { handlers } = require('./lib/list-handlers')
 
+const ui = require('./ui')
 const data = require('./lib/data')
 
 const _ago = require('node-time-ago')
@@ -50,6 +51,11 @@ class App {
     */
   emit (eventName, data) {
     $(document).trigger(eventName, data)
+  }
+
+  ago (date) {
+    // TODO Move the target method here
+    return ago(date)
   }
 
   // Fired on 'init' event
@@ -215,15 +221,10 @@ class App {
       newItemPrompt.find('[type=text]').val('').focus()
     })
     const addListItem = (type, val) => {
-      this.activeList.addModification(
-        ListModification.fromData(new Date(), handlers.CREATE.command, this.user.id, `${type}|${val || 'Item'}`))
+      this.activeList.modifyAndSave(ListModification.create(handlers.CREATE.command, this.user, `${type}|${val || 'Item'}`))
+      ui.renderer.renderLastEntry(this, this.activeList)
 
-      this.activeList.applyLast()
-      this.renderEntry(this.activeList, this.activeList.entries.length - 1)
       this.setActiveListItem(this.getActiveListItem())
-
-      this.activeList.save()
-
       newItemPrompt.find('.dialog-close').click()
     }
     const input = newItemPrompt.find('[type=text]')
@@ -317,23 +318,6 @@ class App {
 
   /**
     * @method
-    * Gets the FA icon to be used with the specific type of change.
-    *
-    * @param {string} type The type
-    * @return {string} The icon name, without the 'fa-'
-    */
-  getChangeIconForType (type) {
-    switch (type) {
-      case 'CREATE': return 'plus'
-      case 'CHECK': return 'check'
-      case 'UNCHECK': return 'minus'
-
-      default: return 'question'
-    }
-  }
-
-  /**
-    * @method
     * Gets the currently active list item, or -1 if no item is active
     *
     * @return {number} The currently active item
@@ -369,113 +353,6 @@ class App {
 
   /**
     * @method
-    * Renders the entry at the given position in the given list. If a rendered element
-    * already exists for that entry, it is removed and re-rendered.
-    *
-    * @param {List} list The list
-    * @param {number} id The index of the entry
-    */
-  renderEntry (list, id) {
-    const listNode = $('#listNode')
-
-    const item = this.templateNode.find('.list-item').clone()
-    const entry = list.entries[id]
-
-    // add type class and id attr
-    item.addClass('list-item-' + entry.type)
-    item.attr('data-id', id)
-
-    const body = item.find('.list-body')
-
-    const icon = item.find('.list-icon > a')
-    switch (entry.type) {
-      case 'check':
-        icon.addClass('fa-minus')
-        break
-      case 'rule':
-        // TODO
-        break
-      default:
-        icon.addClass('fa-ellipsis-v')
-    }
-    const checkIconUpdate = () => {
-      if (!item.is('.list-item-check')) return
-      if (entry.checked) icon.addClass('fa-check').removeClass('fa-minus')
-      else icon.removeClass('fa-check').addClass('fa-minus')
-    }
-    checkIconUpdate()
-    icon.click(() => {
-      if (!item.is('.list-item-check')) return
-
-      this.activeList.addModification(ListModification.fromData(new Date(), handlers.CHECK.command, this.user.id, item.attr('data-id')))
-      this.activeList.applyLast()
-      this.activeList.save()
-      this.renderEntryChanges(entry, body)
-
-      checkIconUpdate()
-    })
-
-    // set title and click event for item activity
-    body.find('h1').text(entry.title)
-    body.click(e => {
-      if (!$(e.target).is('a')) this.setActiveListItem(this.getActiveListItem() !== id && id)
-    })
-
-    // attach events to item options
-    body.find('.list-options > .fa-close').click(() => {
-      this.activeList.addModification(ListModification.fromData(new Date(), handlers.DELETE.command, this.user.id, item.attr('data-id')))
-      this.activeList.applyLast()
-      this.activeList.save()
-
-      this.renderEntries()
-    })
-
-    // append all changes
-    this.renderEntryChanges(entry, body)
-
-    // insert the item into the proper spot
-    const items = listNode.children('li')
-    if (items.length > 0) {
-      items.eq(id).remove()
-      items.eq(id - 1).after(item)
-    } else {
-      listNode.append(item)
-    }
-  }
-
-  renderEntryChanges (entry, body) {
-    body.find('ul').empty()
-    entry.changes.forEach(change => {
-      const e = this.templateNode.find('.list-item .list-change').clone()
-      e.find('.list-change-icon').addClass('fa-' + this.getChangeIconForType(change.type))
-      e.find('.list-change-user').text(change.user) // TODO Resolve the user
-      e.find('.list-change-time').attr('data-timestamp', change.time.getTime()).text(ago(change.time))
-      e.prependTo(body.find('ul'))
-    })
-
-    this.setActiveListItem()
-  }
-
-  /**
-    * @method
-    * Renders the entire list, clearing any previously-rendered elements from the
-    * list node
-    *
-    * @param {List} list The List
-    */
-  renderEntries (list = this.activeList) {
-    $('#listNode').empty()
-    if (list) {
-      for (let i = 0; i < list.entries.length; i++) {
-        this.renderEntry(list, i)
-      }
-
-      this.setActiveListItem()
-    }
-  }
-
-  /**
-    * @method
     * Renders the collection of lists, clearing any previously-rendered lists from the menu
     */
   renderLists () {
@@ -499,7 +376,7 @@ class App {
 
         node.click(() => {
           this.activeList = list
-          this.renderEntries()
+          ui.renderer.renderEntries(this)
           this.playShiftAnimation(list.title, 'created by ' + list.users[0], true)
         })
 
