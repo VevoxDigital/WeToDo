@@ -5,6 +5,8 @@ const assert = require('assert')
 const { List, ListEntry, ListModification } = require('../lib/list')
 const { handlers } = require('../lib/list-handlers')
 
+const ui = require('./')
+
 exports.NODE_ID = '#listNode'
 exports.TEMPLATE_NODE_ID = '#listTemplateNode'
 
@@ -54,7 +56,7 @@ exports.renderEntry = (app, entry, id) => {
   node.find(`[data-id=${id}]`).remove()
 
   // create a new element to begin rendering
-  const element = $(exports.TEMPLATE_NODE_ID).find('.list-item').clone()
+  const element = app.templateNode.find('.list-item').clone()
   element.addClass('.list-item-' + entry.type).attr('data-id', id)
   element.find('h1').text(entry.title)
 
@@ -149,7 +151,7 @@ exports.renderEntryChanges = (app, entry, element) => {
 
   body.find('ul').empty()
   entry.changes.forEach(change => {
-    const e = $(exports.TEMPLATE_NODE_ID).find('.list-item .list-change').clone()
+    const e = app.templateNode.find('.list-item .list-change').clone()
     e.find('.list-change-icon').addClass('fa-' + exports.getChangeIconForType(change.type))
     e.find('.list-change-user').text(change.user) // TODO Resolve the user
     e.find('.list-change-time').attr('data-timestamp', change.time.getTime()).text(app.ago(change.time))
@@ -175,4 +177,41 @@ exports.getChangeIconForType = type => {
 
     default: return 'question'
   }
+}
+
+/**
+  * @function
+  * Renders the lists for the given app
+  *
+  * @param {App} app The WeToDo app
+  */
+exports.renderList = app => {
+  const menu = $('#menu')
+  menu.find('ul').hide().empty().prev().hide()
+
+  if (this.lists.size > 0) {
+    menu.find('p').hide()
+    const lists = [...this.lists.values()]
+    lists.sort((a, b) => { return a.updateTime.getTime() - b.updateTime.getTime() })
+
+    for (const list of lists) {
+      // TODO Check if lists are favorited, assign target accordingly
+      const target = $('#menuCategory' + (list.isShared() ? 'Shared' : 'Personal'))
+      target.show().prev().show()
+
+      const node = this.templateNode.find('.list').clone()
+      node.find('.list-icon > .fa').addClass(list.isShared() ? 'fa-users' : 'fa-bars')
+      node.find('h1').text(list.title)
+      node.find('.list-change-time').text(app.ago(list.updateTime.getTime()))
+
+      node.click(() => {
+        this.activeList = list
+        exports.renderEntries(this)
+
+        ui.animator.shiftToList(app)
+      })
+
+      target.append(node)
+    }
+  } else menu.find('p').show()
 }

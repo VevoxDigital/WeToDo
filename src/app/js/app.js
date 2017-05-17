@@ -126,7 +126,7 @@ class App {
 
         times.text(ago(time))
       })
-      this.renderLists() // re-render lists every time the time should update
+      ui.renderer.renderLists() // re-render lists every time the time should update
     }, 1000 * 20) // every 20 seconds...?
 
     // bind events
@@ -137,10 +137,10 @@ class App {
     this.bindUIEvents()
 
     // initial list render
-    this.renderLists()
+    ui.renderer.renderLists()
 
     // move the cover out of the way
-    this.playShiftAnimationToHome()
+    ui.animator.shiftToHome(this)
     $('#loadingCover').velocity({
       opacity: 0
     }, {
@@ -177,7 +177,7 @@ class App {
       const list = new List(null, input || 'List', this.user.id)
 
       this.lists.set(list.uuid, list)
-      this.renderLists()
+      ui.renderer.renderLists()
 
       list.save()
 
@@ -197,10 +197,10 @@ class App {
       this.activeList.addModification(ListModification.fromData(new Date(), handlers.LISTRENAME.command, this.user.id, input.val() || 'List'))
       this.activeList.applyLast()
       this.activeList.save()
-      this.renderLists()
+      ui.renderer.renderLists()
 
       editListPrompt.find('.dialog-close').click()
-      this.playShiftAnimation(this.activeList.title, $('#headerSubtitle').text(), true)
+      ui.animator.shiftToList(this)
     })
     editListPrompt.find('.dialog-options > .fa-close').click(() => {
       editListPrompt.find('.dialog-close').click()
@@ -209,8 +209,8 @@ class App {
         this.lists.delete(this.activeList.uuid)
         this.activeList = undefined
 
-        this.renderLists()
-        this.playShiftAnimationToHome()
+        ui.renderer.renderLists()
+        ui.animator.shiftToHome(this)
       })
     })
 
@@ -244,8 +244,9 @@ class App {
     $('#header .fa-bars').click(() => {
       if (this.activeList) {
         this.activeList = undefined
-        this.playShiftAnimationToHome()
         this.renderEntries()
+
+        ui.animator.shiftToHome(this)
       }
     })
   }
@@ -287,35 +288,6 @@ class App {
     this.showDialog('Confirm')
   }
 
-  playShiftAnimationToHome () {
-    let name = this.user.data.name
-    name = name.indexOf(' ') > 0 ? name.substring(0, name.indexOf(' ')) : name
-
-    this.playShiftAnimation('Hi, ' + name, 'Unknown Account')
-  }
-
-  playShiftAnimation (title, desc, offset) {
-    const duration = 400
-
-    const h1 = $('#headerTitle')
-    const h2 = $('#headerSubtitle')
-    const height = `-${this.headerHeight}px`
-
-    h1.css('top', 0).velocity({ top: height }, duration, [ 250, 20 ])
-    h2.css('top', 0).velocity({ top: height }, duration + 50, [ 250, 20 ])
-
-    $('.body-content').velocity({
-      left: offset ? '-100vw' : 0
-    }, {
-      duration: duration,
-      easing: [ 250, 20 ],
-      complete: () => {
-        h1.text(title).css('top', height).velocity({ top: 0 }, duration, [ 250, 20 ])
-        h2.text(desc).css('top', height).velocity({ top: 0 }, duration + 50, [ 250, 20 ])
-      }
-    })
-  }
-
   /**
     * @method
     * Gets the currently active list item, or -1 if no item is active
@@ -349,40 +321,6 @@ class App {
     } else {
       $('#listNode').removeAttr('data-active-item')
     }
-  }
-
-  /**
-    * @method
-    * Renders the collection of lists, clearing any previously-rendered lists from the menu
-    */
-  renderLists () {
-    const menu = $('#menu')
-    menu.find('ul').hide().empty().prev().hide()
-
-    if (this.lists.size > 0) {
-      menu.find('p').hide()
-      const lists = [...this.lists.values()]
-      lists.sort((a, b) => { return a.updateTime.getTime() - b.updateTime.getTime() })
-
-      for (const list of lists) {
-        // TODO Check if lists are favorited, assign target accordingly
-        const target = $('#menuCategory' + (list.isShared() ? 'Shared' : 'Personal'))
-        target.show().prev().show()
-
-        const node = this.templateNode.find('.list').clone()
-        node.find('.list-icon > .fa').addClass(list.isShared() ? 'fa-users' : 'fa-bars')
-        node.find('h1').text(list.title)
-        node.find('.list-change-time').text(ago(list.updateTime.getTime()))
-
-        node.click(() => {
-          this.activeList = list
-          ui.renderer.renderEntries(this)
-          this.playShiftAnimation(list.title, 'created by ' + list.users[0], true)
-        })
-
-        target.append(node)
-      }
-    } else menu.find('p').show()
   }
 }
 
