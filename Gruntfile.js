@@ -66,7 +66,7 @@ exports = module.exports = grunt => {
       app: {
         options: {
           root: './src/app/js/lib',
-          istanbulOptions: [ '-x', 'data.js' ]
+          istanbulOptions: [ '-x', 'data.js', '-x', 'ui/**' ]
         },
         src: [ 'test/**/*.js' ]
       }
