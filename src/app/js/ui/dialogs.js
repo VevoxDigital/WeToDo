@@ -125,7 +125,7 @@ exports.bindDialogListEdit = app => {
   prompt.submit(() => {
     const input = prompt.find('[type=text]')
 
-    app.activeList.modifyAndSave(ListModification.create(handlers.LISTRENAME.command, app, input.val() || 'List'))
+    app.activeList.modifyAndSave(ListModification.create(handlers.LISTRENAME.command, app.user, input.val() || 'List'))
     ui.renderer.renderLists(app)
 
     prompt.find('.dialog-close').click()
