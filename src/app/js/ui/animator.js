@@ -44,7 +44,7 @@ exports.shiftToMenu = app => {
   name = name.indexOf(' ') > 0 ? name.substring(0, name.indexOf(' ')) : name
 
   // TODO Set account type properly
-  this.playShiftAnimation('Hi, ' + name, 'Unknown Account')
+  exports.shift(app, 'Hi, ' + name, 'Unknown Account')
 }
 
 /**

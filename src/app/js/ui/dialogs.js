@@ -1,7 +1,7 @@
 'use strict'
 
 const { List, ListModification } = require('../lib/list')
-const { handlers } = require('../lib/handlers')
+const { handlers } = require('../lib/list-handlers')
 const data = require('../lib/data')
 const ui = require('./')
 
@@ -78,9 +78,9 @@ exports.bindDialogEvents = app => {
   dialogConfirm.find('.btn-cancel').click(dialogConfirm.find('.dialog-close').click)
 
   // bind other dialog events
-  exports.bindDialogNewList()
+  exports.bindDialogNewList(app)
   exports.bindDialogListEdit(app)
-  exports.bindDialogNewListItem()
+  exports.bindDialogNewListItem(app)
 }
 
 /**
@@ -88,7 +88,7 @@ exports.bindDialogEvents = app => {
   * @private
   * Binds the NewList dialog
   */
-exports.bindDialogNewList = () => {
+exports.bindDialogNewList = app => {
   const prompt = $('#dialogListPrompt')
   $('#menu > button').click(() => {
     exports.show('ListPrompt')
@@ -97,10 +97,10 @@ exports.bindDialogNewList = () => {
 
   prompt.submit(() => {
     const input = prompt.find('[type=text]').val()
-    const list = new List(null, input || 'List', this.user.id)
+    const list = new List(null, input || 'List', app.user.id)
 
-    this.lists.set(list.uuid, list)
-    ui.renderer.renderLists()
+    app.lists.set(list.uuid, list)
+    ui.renderer.renderLists(app)
 
     list.save()
 
@@ -118,28 +118,28 @@ exports.bindDialogNewList = () => {
 exports.bindDialogListEdit = app => {
   const prompt = $('#dialogListEditPrompt')
   $('#listOptions .fa-cog').click(() => {
-    if (!this.activeList || this.activeList.users[0] !== this.user.id) return
+    if (!app.activeList || app.activeList.users[0] !== app.user.id) return
     ui.dialogs.show('ListEditPrompt')
-    prompt.find('[type=text]').val(this.activeList.title).focus()
+    prompt.find('[type=text]').val(app.activeList.title).focus()
   })
   prompt.submit(() => {
     const input = prompt.find('[type=text]')
 
-    this.activeList.modifyAndSave(ListModification.create(handlers.LISTRENAME.command, app, input.val() || 'List'))
-    ui.renderer.renderLists()
+    app.activeList.modifyAndSave(ListModification.create(handlers.LISTRENAME.command, app, input.val() || 'List'))
+    ui.renderer.renderLists(app)
 
     prompt.find('.dialog-close').click()
-    ui.animator.shiftToList(this)
+    ui.animator.shiftToList(app)
   })
   prompt.find('.dialog-options > .fa-close').click(() => {
     prompt.find('.dialog-close').click()
     ui.dialogs.confirm('Really delete this list? This action cannot be undone!', () => {
-      data.deleteList(this.activeList.uuid)
-      this.lists.delete(this.activeList.uuid)
-      this.activeList = undefined
+      data.deleteList(app.activeList.uuid)
+      app.lists.delete(app.activeList.uuid)
+      app.activeList = undefined
 
-      ui.renderer.renderLists()
-      ui.animator.shiftToHome(this)
+      ui.renderer.renderLists(app)
+      ui.animator.shiftToHome(app)
     })
   })
 }
@@ -149,17 +149,17 @@ exports.bindDialogListEdit = app => {
   * @private
   * Binds the NewListItem dialog
   */
-exports.bindDialogNewListItem = () => {
+exports.bindDialogNewListItem = app => {
   const prompt = $('#dialogListItemPrompt')
   $('#listOptions .fa-plus').click(() => {
     ui.dialogs.show('ListItemPrompt')
     prompt.find('[type=text]').val('').focus()
   })
   const addListItem = (type, val) => {
-    this.activeList.modifyAndSave(ListModification.create(handlers.CREATE.command, this.user, `${type}|${val || 'Item'}`))
-    ui.renderer.renderLastEntry(this, this.activeList)
+    app.activeList.modifyAndSave(ListModification.create(handlers.CREATE.command, app.user, `${type}|${val || 'Item'}`))
+    ui.renderer.renderLastEntry(app, app.activeList)
 
-    this.setActiveListItem(this.getActiveListItem())
+    app.setActiveListItem(app.getActiveListItem())
     prompt.find('.dialog-close').click()
   }
   const input = prompt.find('[type=text]')

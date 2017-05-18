@@ -125,7 +125,7 @@ class App {
 
         times.text(ago(time))
       })
-      ui.renderer.renderLists() // re-render lists every time the time should update
+      ui.renderer.renderLists(this) // re-render lists every time the time should update
     }, 1000 * 20) // every 20 seconds...?
 
     // bind events
@@ -136,10 +136,10 @@ class App {
     this.bindUIEvents()
 
     // initial list render
-    ui.renderer.renderLists()
+    ui.renderer.renderLists(this)
 
     // move the cover out of the way
-    ui.animator.shiftToHome(this)
+    ui.animator.shiftToMenu(this)
     $('#loadingCover').velocity({
       opacity: 0
     }, {
@@ -160,11 +160,13 @@ class App {
     $('#header .fa-bars').click(() => {
       if (this.activeList) {
         this.activeList = undefined
-        this.renderEntries()
 
-        ui.animator.shiftToHome(this)
+        ui.renderer.renderEntries(this)
+        ui.animator.shiftToMenu(this)
       }
     })
+
+    ui.dialogs.bindDialogEvents(this)
   }
 
   /**

@@ -16,7 +16,7 @@ exports.TEMPLATE_NODE_ID = '#listTemplateNode'
   *
   * @param {App} app The WeToDo app
   */
-exports.renderEntries = (app) => {
+exports.renderEntries = app => {
   $(exports.NODE_ID).empty()
 
   if (app.activeList) {
@@ -185,13 +185,13 @@ exports.getChangeIconForType = type => {
   *
   * @param {App} app The WeToDo app
   */
-exports.renderList = app => {
+exports.renderLists = app => {
   const menu = $('#menu')
   menu.find('ul').hide().empty().prev().hide()
 
-  if (this.lists.size > 0) {
+  if (app.lists.size > 0) {
     menu.find('p').hide()
-    const lists = [...this.lists.values()]
+    const lists = [...app.lists.values()]
     lists.sort((a, b) => { return a.updateTime.getTime() - b.updateTime.getTime() })
 
     for (const list of lists) {
@@ -199,14 +199,14 @@ exports.renderList = app => {
       const target = $('#menuCategory' + (list.isShared() ? 'Shared' : 'Personal'))
       target.show().prev().show()
 
-      const node = this.templateNode.find('.list').clone()
+      const node = app.templateNode.find('.list').clone()
       node.find('.list-icon > .fa').addClass(list.isShared() ? 'fa-users' : 'fa-bars')
       node.find('h1').text(list.title)
       node.find('.list-change-time').text(app.ago(list.updateTime.getTime()))
 
       node.click(() => {
-        this.activeList = list
-        exports.renderEntries(this)
+        app.activeList = list
+        exports.renderEntries(app)
 
         ui.animator.shiftToList(app)
       })
