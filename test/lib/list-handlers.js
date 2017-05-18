@@ -2,7 +2,7 @@
 
 const expect = require('expect.js')
 
-const { List, ListModification } = require('../../src/app/js/lib/list')
+const { List, ListModification, ListEntry } = require('../../src/app/js/lib/list')
 const { handlers } = require('../../src/app/js/lib/list-handlers')
 
 describe('lib/list-handlers', () => {
@@ -31,6 +31,31 @@ describe('lib/list-handlers', () => {
 
       expect(list._entries.length).to.be(1)
       expect(list._entries[0]).to.be('bar')
+    })
+  })
+
+  describe('CheckCommandHandler', () => {
+    it('should handle command: CHECK', () => {
+      expect(handlers.CHECK.command).to.be('CHECK')
+    })
+
+    it('should check the entry', () => {
+      const list = new List()
+      const entry = new ListEntry('check', 'Title')
+
+      list.addEntry(entry)
+
+      expect(entry.checked).to.not.be.ok()
+      expect(entry._changes.length).to.be(0)
+
+      const mod = ListModification.create(handlers.CHECK.command, { id: 'local:0' }, '0')
+      list.addModification(mod)
+      list.applyLast() // Don't use modifyAndSave(), as we do not want to save here
+
+      expect(entry.checked).to.be.ok()
+      expect(entry._changes.length).to.be(1)
+
+      list.applyLast() // this should cause the other branch to be tested
     })
   })
 

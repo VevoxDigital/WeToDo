@@ -22,6 +22,17 @@ describe('ListModification', () => {
     })
   })
 
+  describe('create()', () => {
+    it('should create a modification from data', () => {
+      const e = lists.ListModification.create('CREATE', { id: 'local:0' }, 'bar')
+
+      expect(e.time).to.be.a(Date)
+      expect(e.handler.command).to.be('CREATE')
+      expect(e.user).to.be('local:0')
+      expect(e.data).to.be('bar')
+    })
+  })
+
   describe('<init>', () => {
     it('should fail if input is non-string', () => {
       try {
@@ -174,6 +185,23 @@ describe('List', () => {
 
       expect(list.modifications.length).to.be(2)
       expect(list.modifications[0].time.getTime()).to.be(22)
+    })
+  })
+
+  describe('#modifyAndSave()', () => {
+    it('should add modification, apply last, and save', () => {
+      const list = new lists.List()
+
+      let t = { }
+
+      list.applyLast = () => { t.applied = true }
+      list.addModification = mod => { t.modification = mod }
+
+      list.save = () => {
+        expect(t.applied).to.be(true)
+        expect(t.modification).to.be('foo')
+      }
+      list.modifyAndSave('foo')
     })
   })
 
