@@ -1,8 +1,7 @@
 'use strict'
 
-const { List, ListModification } = require('./lib/list')
+const { List } = require('./lib/list')
 const { User } = require('./lib/user')
-const { handlers } = require('./lib/list-handlers')
 
 const ui = require('./ui')
 const data = require('./lib/data')
@@ -152,92 +151,9 @@ class App {
   }
 
   bindUIEvents () {
-    const self = this
-
-    // dialog closing
-    $('#dialogs .dialog-close').click(function () {
-      self.hideDialog($(this).parent().attr('id').substring(6))
-    })
-
-    // confirmation dialog
-    const dialogConfirm = $('#dialogConfirm')
-    dialogConfirm.find('.dialog-close').click(() => {
-      dialogConfirm.find('.btn-confirm').unbind('click')
-    })
-    dialogConfirm.find('.btn-cancel').click(dialogConfirm.find('.dialog-close').click)
-
-    // new list dialog
-    const newListPrompt = $('#dialogListPrompt')
-    $('#menu > button').click(() => {
-      this.showDialog('ListPrompt')
-      newListPrompt.find('[type=text]').val('').focus()
-    })
-    newListPrompt.submit(() => {
-      const input = newListPrompt.find('[type=text]').val()
-      const list = new List(null, input || 'List', this.user.id)
-
-      this.lists.set(list.uuid, list)
-      ui.renderer.renderLists()
-
-      list.save()
-
-      newListPrompt.find('.dialog-close').click()
-    })
-
-    // list edit dialog
-    const editListPrompt = $('#dialogListEditPrompt')
-    $('#listOptions .fa-cog').click(() => {
-      if (!this.activeList || this.activeList.users[0] !== this.user.id) return
-      this.showDialog('ListEditPrompt')
-      editListPrompt.find('[type=text]').val(this.activeList.title).focus()
-    })
-    editListPrompt.submit(() => {
-      const input = editListPrompt.find('[type=text]')
-
-      this.activeList.addModification(ListModification.fromData(new Date(), handlers.LISTRENAME.command, this.user.id, input.val() || 'List'))
-      this.activeList.applyLast()
-      this.activeList.save()
-      ui.renderer.renderLists()
-
-      editListPrompt.find('.dialog-close').click()
-      ui.animator.shiftToList(this)
-    })
-    editListPrompt.find('.dialog-options > .fa-close').click(() => {
-      editListPrompt.find('.dialog-close').click()
-      this.promptForConfirmation('Really delete this list? This action cannot be undone!', () => {
-        data.deleteList(this.activeList.uuid)
-        this.lists.delete(this.activeList.uuid)
-        this.activeList = undefined
-
-        ui.renderer.renderLists()
-        ui.animator.shiftToHome(this)
-      })
-    })
-
-    // new list item dialog
-    const newItemPrompt = $('#dialogListItemPrompt')
-    $('#listOptions .fa-plus').click(() => {
-      this.showDialog('ListItemPrompt')
-      newItemPrompt.find('[type=text]').val('').focus()
-    })
-    const addListItem = (type, val) => {
-      this.activeList.modifyAndSave(ListModification.create(handlers.CREATE.command, this.user, `${type}|${val || 'Item'}`))
-      ui.renderer.renderLastEntry(this, this.activeList)
-
-      this.setActiveListItem(this.getActiveListItem())
-      newItemPrompt.find('.dialog-close').click()
-    }
-    const input = newItemPrompt.find('[type=text]')
-    newItemPrompt.submit(() => {
-      addListItem('check', input.val())
-    })
-    newItemPrompt.find('.dialog-options > a').click(function () {
-      addListItem($(this).attr('data-type'), input.val())
-    })
-
-    // about dialog
+    // show about dialog on click
     $('#header .fa-info').click(() => {
-      this.showDialog('About')
+      ui.dialogs.show('About')
     })
 
     // return home in list view
@@ -249,43 +165,6 @@ class App {
         ui.animator.shiftToHome(this)
       }
     })
-  }
-
-  showDialog (dialog) {
-    const d = $('#dialog' + dialog)
-    const { w, h } = { w: d.width(), h: d.height() }
-
-    d.css('opacity', 0)
-      .css('width', w - 100)
-      .css('height', h - 100)
-      .show().velocity({
-        opacity: 1,
-        width: w,
-        height: h
-      }, 500, [500, 30])
-  }
-
-  hideDialog (dialog) {
-    const d = $('#dialog' + dialog)
-    d.velocity({
-      opacity: 0
-    }, {
-      duration: 250,
-      complete: () => {
-        d.hide()
-        d.removeAttr('style')
-      }
-    })
-  }
-
-  promptForConfirmation (message, cb) {
-    const dialog = $('#dialogConfirm')
-    dialog.find('.target').text(message)
-    dialog.find('.btn-confirm').click(() => {
-      dialog.find('.dialog-close').click()
-      cb()
-    })
-    this.showDialog('Confirm')
   }
 
   /**
