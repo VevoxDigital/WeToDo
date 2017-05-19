@@ -44,9 +44,20 @@ section#dialogs
   
   //- About
   +dialog('About', 'About ' + app.productName)
-    h1= `${app.productName} v${app.version}`
-    strong TODO Some info needs to be here.
+    h1
+      = app.productName + ' '
+      small= app.version
+    p.text-center
+      | WeToDo is an easy-to-use and open-source time-tracker and To-do list,
+      | designed to be colaborative and friendly.
+      
+    p.text-center(style='margin: 5px')
+      a(href='https://github.com/VevoxDigital/WeToDo' target='_system') GitHub
+      | -
+      a(href='http://vevox.io/p/wetodo' target='_system') Workshop
     
     hr
-    strong To my Warrior, Half the World Away
-    em Copyright &copy; Matthew Struble, 2017
+    p.text-center
+      em To my Warrior, Half the World Away
+      br
+      | Copyright &copy; Matthew Struble, 2017

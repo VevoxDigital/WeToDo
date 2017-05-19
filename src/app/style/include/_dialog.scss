@@ -99,3 +99,24 @@
     }
   }
 }
+
+#dialogAbout {
+  h1 {
+    font-family: Ubuntu, sans-serif;
+    margin: 0;
+    margin-bottom: 10px;
+
+    small {
+      font-size: 60%;
+    }
+  }
+
+  p {
+    font-size: 10pt;
+    margin: 0;
+
+    em {
+      font-size: 110%;
+    }
+  }
+}

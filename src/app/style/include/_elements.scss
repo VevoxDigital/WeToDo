@@ -46,16 +46,27 @@ input {
   }
 }
 
-.btn.btn-confirm {
-  background: $color-bluegreen1;
+a {
+  color: $color-blue;
+  font-size: 10pt;
+  padding: 0 5px;
+  text-decoration: none;
+  transition: opacity 250ms;
+
+  &:hover {
+    opacity: .7;
+  }
+
+  &.btn {
+    display: inline-block;
+    margin: 0 4px;
+    padding: 8px 15px;
+    width: auto;
+  }
 }
 
-// scss-lint:disable QualifyingElement
-a.btn {
-  display: inline-block;
-  margin: 0 4px;
-  padding: 8px 15px;
-  width: auto;
+.btn.btn-confirm {
+  background: $color-bluegreen1;
 }
 
 .text-center { text-align: center; }
