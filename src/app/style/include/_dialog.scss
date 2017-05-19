@@ -1,20 +1,37 @@
 #dialogs > dialog {
   background: $color-white1;
   border: 0;
-  border-radius: 5px;
-  box-shadow: 0 0 0 1000vh rgba($color-black, .3);
   color: $color-gray8;
+  margin: 0 10vw;
   max-height: 90vh;
-  max-width: 70vw;
   padding: 0;
   position: fixed;
-  top: 20vh;
+  top: -100%;
+  width: 80vw;
   z-index: 10;
 
+  .dialog-cover {
+    background: $color-blue;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  .dialog-bg {
+    background: rgba($color-black, .3);
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: -1;
+  }
+
   .dialog-title {
-    background: $color-black2;
-    border-radius: 5px 5px 0 0;
-    color: rgba($color-white, .6);
+    background: $color-black1;
+    color: rgba($color-white, .8);
     font-family: Ubuntu, sans-serif;
     font-size: 12pt;
     font-weight: bold;
@@ -38,6 +55,7 @@
   }
 
   .dialog-content {
+    background: $color-white1;
     padding: 10px 30px;
     width: 100%;
 

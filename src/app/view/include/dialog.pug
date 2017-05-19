@@ -1,5 +1,7 @@
 mixin dialog(id, title, icon)
   dialog(id='dialog' + id)
+    .dialog-cover
+    .dialog-bg
     .dialog-title
       if icon
         a(class='fa fa-'+icon href='javascript')

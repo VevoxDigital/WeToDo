@@ -13,16 +13,25 @@ const ui = require('./')
   */
 exports.show = dialog => {
   const d = $('#dialog' + dialog)
-  const { w, h } = { w: d.width(), h: d.height() }
+  const cover = d.find('.dialog-cover')
 
-  d.css('opacity', 0)
-    .css('width', w - 100)
-    .css('height', h - 100)
-    .show().velocity({
-      opacity: 1,
-      width: w,
-      height: h
-    }, 500, [500, 30])
+  d.show().velocity({
+    top: 0,
+    opacity: 1
+  }, {
+    duration: 250,
+    easing: 'ease-out',
+    complete: () => {
+      d.find('.dialog-bg').one('click', () => {
+        d.find('.dialog-close').click()
+      })
+
+      cover.velocity({
+        top: '100%',
+        height: '5px'
+      }, 250)
+    }
+  })
 }
 
 /**
@@ -33,13 +42,22 @@ exports.show = dialog => {
   */
 exports.hide = dialog => {
   const d = $('#dialog' + dialog)
-  d.velocity({
-    opacity: 0
+  const cover = d.find('.dialog-cover')
+
+  cover.velocity({
+    top: 0,
+    height: '100%'
   }, {
     duration: 250,
     complete: () => {
-      d.hide()
-      d.removeAttr('style')
+      d.velocity({
+        opacity: 0,
+        top: '-100%'
+      }, {
+        duration: 250,
+        easing: 'ease-in',
+        complete: () => { d.hide() }
+      })
     }
   })
 }
