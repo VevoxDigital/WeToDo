@@ -153,7 +153,7 @@ exports.renderEntryChanges = (app, entry, element) => {
   entry.changes.forEach(change => {
     const e = app.templateNode.find('.list-item .list-change').clone()
     e.find('.list-change-icon').addClass('fa-' + exports.getChangeIconForType(change.type))
-    e.find('.list-change-user').text(change.user) // TODO Resolve the user
+    e.find('.list-change-user').text('Unknown').attr('data-user', change.user)
     e.find('.list-change-time').attr('data-timestamp', change.time.getTime()).text(app.ago(change.time))
     e.prependTo(body.find('ul'))
   })

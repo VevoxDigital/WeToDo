@@ -4,8 +4,7 @@ const assert = require('assert')
 
 const LOCALS = [
   'WeToDo',
-  'John Doe',
-  'Jane Doe'
+  'you'
 ]
 
 const resolvers = new Map()

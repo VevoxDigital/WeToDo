@@ -167,6 +167,23 @@ class App {
     })
 
     ui.dialogs.bindDialogEvents(this)
+    this.bindUserResolution()
+  }
+
+  bindUserResolution () {
+    setInterval(() => {
+      $('[data-user]:not([data-user-resolve])').each((index, element) => {
+        const e = $(element)
+        e.attr('data-user-resolve', 0)
+
+        const user = new User(e.attr('data-user'))
+        user.resolve().then(() => {
+          e.attr('data-user-resolve', 1).text(user.data.name)
+        }).catch(() => {
+          e.attr('data-user-resolve', -1)
+        })
+      })
+    }, 100)
   }
 
   /**

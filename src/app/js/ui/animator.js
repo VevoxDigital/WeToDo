@@ -29,6 +29,8 @@ exports.shift = (app, title, desc, isRight) => {
     complete: () => {
       h1.text(title).css('top', height).velocity({ top: 0 }, exports.ANIMATION_TIME, [ 250, 20 ])
       h2.text(desc).css('top', height).velocity({ top: 0 }, exports.ANIMATION_TIME + 50, [ 250, 20 ])
+
+      if (isRight) h2.append($(`<span data-user="${app.activeList.users[0]}">Unknown</span>`))
     }
   })
 }
@@ -40,11 +42,14 @@ exports.shift = (app, title, desc, isRight) => {
   * @param {App} app The WeToDo app
   */
 exports.shiftToMenu = app => {
-  let name = app.user.data.name
-  name = name.indexOf(' ') > 0 ? name.substring(0, name.indexOf(' ')) : name
+  if (app.user.provider === 'local') exports.shift(app, 'Hi, User', 'Not Signed In')
+  else {
+    let name = app.user.data.name
+    name = name.indexOf(' ') > 0 ? name.substring(0, name.indexOf(' ')) : name
 
-  // TODO Set account type properly
-  exports.shift(app, 'Hi, ' + name, 'Unknown Account')
+    // TODO set account type
+    exports.shift(app, 'Hi, ' + name, 'Unknown account')
+  }
 }
 
 /**
@@ -54,5 +59,5 @@ exports.shiftToMenu = app => {
   * @param {App} app The WeToDo app
   */
 exports.shiftToList = app => {
-  exports.shift(app, app.activeList.title, exports.LIST_DESC_PREFIX + app.activeList.users[0].name, true)
+  exports.shift(app, app.activeList.title, exports.LIST_DESC_PREFIX + ' ', true)
 }
