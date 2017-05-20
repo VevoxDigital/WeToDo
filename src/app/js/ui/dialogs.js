@@ -81,6 +81,18 @@ exports.confirm = (message, cb) => {
 
 /**
   * @function
+  * Sends an alert to the user
+  *
+  * @param {string} message The message to send
+  */
+exports.alert = message => {
+  const dialog = $('#dialogAlert')
+  dialog.find('.target').html(message)
+  exports.show('Alert')
+}
+
+/**
+  * @function
   * Binds all dialog events to their respective dialogs
   *
   * @param {App} app The WeToDo app
@@ -93,7 +105,11 @@ exports.bindDialogEvents = app => {
 
   // confirmation dialog
   const dialogConfirm = $('#dialogConfirm')
-  dialogConfirm.find('.btn-cancel').click(dialogConfirm.find('.dialog-close').click)
+  dialogConfirm.find('.btn-cancel').click(() => { dialogConfirm.find('.dialog-close').click() })
+
+  // alert dialog
+  const dialogAlert = $('#dialogAlert')
+  dialogAlert.find('.btn-confirm').click(() => { dialogAlert.find('.dialog-close').click() })
 
   // bind other dialog events
   exports.bindDialogNewList(app)

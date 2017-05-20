@@ -9,6 +9,7 @@ const data = require('./lib/data')
 const _ago = require('node-time-ago')
 
 const KEY_USER = 'user'
+const KEY_NEW = 'isNew'
 
 const ago = time => {
   const a = _ago(time)
@@ -148,6 +149,16 @@ class App {
         $('#loadingCover').remove()
       }
     })
+
+    if (!this.storage.getItem(KEY_NEW)) {
+      ui.dialogs.alert(
+        'WeToDo is still in early development stages, and some functionality may be missing or mis-behaved. ' +
+        'Please help us correct these issues by submitting reports to ' +
+        '<a href="https://github.com/VevoxDigital/WeToDo/issues" target="_system">our GitHub</a>.<br><br>Thank you for using WeToDo, ' +
+        'and thank you for helping us continue to develop it into something even better.'
+      )
+      this.storage.setItem(KEY_NEW, true)
+    }
   }
 
   bindUIEvents () {

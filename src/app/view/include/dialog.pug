@@ -12,13 +12,13 @@ mixin dialog(id, title, icon)
 
 section#dialogs
   //- New list
-  +dialog('ListPrompt', 'New List')
+  +dialog('ListPrompt', 'New List', 'plus')
     form(action='javascript:')
       input(type='text')
       input(type='submit' value='Create List')
         
   //- Edit list
-  +dialog('ListEditPrompt', 'Edit List')
+  +dialog('ListEditPrompt', 'Edit List', 'pencil')
     form(action='javascript:')
       input(type='text')
       input(type='submit' value='Rename')
@@ -27,7 +27,7 @@ section#dialogs
       a.fa.fa-users(href='javascript:')
   
   //- New list item
-  +dialog('ListItemPrompt', 'New Item')
+  +dialog('ListItemPrompt', 'New Item', 'plus')
     form(action='javascript:')
       input(type='text')
       input(type='submit' value='Create Item')
@@ -36,11 +36,17 @@ section#dialogs
       a(href='javascript:' data-type='rule') New Divider
   
   //- Confirmation
-  +dialog('Confirm', 'Confirm Action')
+  +dialog('Confirm', 'Confirm Action', 'question')
     p.text-center.target Confirm action?
     .text-center
       a.btn.btn-confirm(href='javascript:') Confirm
       a.btn.btn-cancel(href='javascript:') Cancel
+  
+  //- Alert
+  +dialog('Alert', 'Head\'s up!', 'exclamation')
+    p.text-center.target ...
+    .text-center
+      a.btn.btn-confirm(href='javascript:') Okay
   
   //- About
   +dialog('About', 'About ' + app.productName)
