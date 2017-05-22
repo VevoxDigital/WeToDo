@@ -57,23 +57,28 @@ exports.renderEntry = (app, entry, id) => {
 
   // create a new element to begin rendering
   const element = app.templateNode.find('.list-item').clone()
-  element.addClass('.list-item-' + entry.type).attr('data-id', id)
-  element.find('h1').text(entry.title)
+  element.addClass('list-item-' + entry.type).attr('data-id', id)
 
-  exports.renderEntryIcon(app, entry, element)
-  exports.renderEntryChanges(app, entry, element)
+  if (entry.type !== 'rule') {
+    element.find('h1').text(entry.title)
 
-  // set active list item on click
-  element.click(e => {
-    if ($(e.target).is('a')) return
-    app.setActiveListItem(app.getActiveListItem() !== id && id)
-  })
+    exports.renderEntryIcon(app, entry, element)
+    exports.renderEntryChanges(app, entry, element)
 
-  // bind options
-  element.find('.list-options > .fa-close').click(() => {
-    app.activeList.modifyAndSave(ListModification.create(handlers.DELETE.command, app.user, id))
-    exports.renderEntries(app.activeList)
-  })
+    // set active list item on click
+    element.click(e => {
+      if ($(e.target).is('a')) return
+      app.setActiveListItem(app.getActiveListItem() !== id && id)
+    })
+
+    // bind options
+    element.find('.list-options > .fa-close').click(() => {
+      app.activeList.modifyAndSave(ListModification.create(handlers.DELETE.command, app.user, id))
+      exports.renderEntries(app.activeList)
+    })
+  } else {
+    element.html(`<h1>${entry.title}</h1>`)
+  }
 
   // insert the item into the proper spot
   const items = node.children('li')

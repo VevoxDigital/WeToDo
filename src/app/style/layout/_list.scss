@@ -16,6 +16,19 @@
     padding-top: 10px;
     width: 100%;
 
+    &.list-item-rule {
+      padding: 5px 10vw;
+
+      > h1 {
+        color: $color-gray5;
+        font-family: Ubuntu, sans-serif;
+        margin: 0;
+        margin-bottom: -20px;
+        padding-top: 25px;
+        width: 100%;
+      }
+    }
+
     > .list-icon {
       flex: 0 0 40px;
       padding-right: 15px;
