@@ -72,12 +72,12 @@ exports.renderEntry = (app, entry, id) => {
     })
 
     // bind options
-    element.find('.list-options > .fa-close').click(() => {
-      app.activeList.modifyAndSave(ListModification.create(handlers.DELETE.command, app.user, id))
-      exports.renderEntries(app.activeList)
+    element.find('.list-options > .fa-pencil').click(() => {
+      exports.showOptionsDialog(app, entry, id)
     })
   } else {
     element.html(`<h1>${entry.title}</h1>`)
+    element.click(() => { exports.showOptionsDialog(app, entry, id) })
   }
 
   // insert the item into the proper spot
@@ -86,6 +86,11 @@ exports.renderEntry = (app, entry, id) => {
     items.eq(id).remove()
     items.eq(id - 1).after(element)
   } else node.append(element)
+}
+
+exports.showOptionsDialog = (app, entry, id) => {
+  const dialog = ui.dialogs.showAndFocus('ListItemEditPrompt', '[type=text]', entry.title)
+  dialog.attr('data-item-id', id)
 }
 
 /**

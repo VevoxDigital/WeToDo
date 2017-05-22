@@ -136,6 +136,7 @@ exports.bindDialogEvents = app => {
   exports.bindDialogNewList(app)
   exports.bindDialogListEdit(app)
   exports.bindDialogNewListItem(app)
+  exports.bindDialogListItemEdit(app)
 }
 
 /**
@@ -223,5 +224,30 @@ exports.bindDialogNewListItem = app => {
   })
   prompt.find('.dialog-options > a').click(function () {
     addListItem($(this).attr('data-type'), input.val())
+  })
+}
+
+/**
+  * @function
+  * @private
+  * Binds the ListItemEdit dialog
+  */
+exports.bindDialogListItemEdit = app => {
+  const prompt = $('#dialogListItemEditPrompt')
+
+  const clearData = () => {
+    prompt.find('[type=text]').val('')
+    prompt.find('.dialog-close').click()
+    ui.renderer.renderEntries(app)
+  }
+
+  prompt.find('form').submit(() => {
+    app.activeList.modifyAndSave(
+      ListModification.create(handlers.RENAME.command, app.user, `${prompt.attr('data-item')}|${prompt.find('[type=text]').val()}`))
+    clearData()
+  })
+  prompt.find('.dialog-options > a').click(() => {
+    app.activeList.modifyAndSave(ListModification.create(handlers.DELETE.command, app.user, prompt.attr('data-item-id')))
+    clearData()
   })
 }

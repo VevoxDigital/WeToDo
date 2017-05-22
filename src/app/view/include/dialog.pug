@@ -34,6 +34,13 @@ section#dialogs
     .dialog-options
       a(href='javascript:' data-type='note') New Note
       a(href='javascript:' data-type='rule') New Divider
+      
+  +dialog('ListItemEditPrompt', 'Edit Item', 'pencil')
+    form(action='javascript:')
+      input(type='text')
+      input(type='submit' value='Rename')
+    .dialog-options
+      a(href='javascript:') Delete Item
   
   //- Confirmation
   +dialog('Confirm', 'Confirm Action', 'question')
