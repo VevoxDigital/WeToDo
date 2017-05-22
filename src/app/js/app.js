@@ -163,9 +163,10 @@ class App {
 
   bindUIEvents () {
     // show about dialog on click
-    $('#header .fa-info').click(() => {
-      ui.dialogs.show('About')
-    })
+    $('#header .fa-info').click(() => { ui.dialogs.show('About') })
+
+    // TODO Actual user dialog
+    $('#header .fa-user').click(() => { ui.dialogs.alert('Collaborative list editing will be available soon!') })
 
     // return home in list view
     $('#header .fa-bars').click(() => {
