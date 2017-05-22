@@ -59,6 +59,25 @@ describe('lib/list-handlers', () => {
     })
   })
 
+  describe('RenameCommandHandler', () => {
+    it('should handle command: RENAME', () => {
+      expect(handlers.RENAME.command).to.be('RENAME')
+    })
+
+    it('should rename the list', () => {
+      const list = new List()
+      const entry = new ListEntry('check', 'title1')
+      list.addEntry(entry)
+
+      expect(entry.title).to.be('title1')
+
+      const mod = ListModification.create(handlers.RENAME.command, { id: 'local:0' }, '0|title2')
+      handlers.RENAME.handle(mod, list)
+
+      expect(entry.title).to.be('title2')
+    })
+  })
+
   describe('RenameListCommandHandler', () => {
     it('should handle command: LISTRENAME', () => {
       expect(handlers.LISTRENAME.command).to.be('LISTRENAME')
