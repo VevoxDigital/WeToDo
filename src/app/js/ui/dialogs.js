@@ -243,7 +243,7 @@ exports.bindDialogListItemEdit = app => {
 
   prompt.find('form').submit(() => {
     app.activeList.modifyAndSave(
-      ListModification.create(handlers.RENAME.command, app.user, `${prompt.attr('data-item')}|${prompt.find('[type=text]').val()}`))
+      ListModification.create(handlers.RENAME.command, app.user, `${prompt.attr('data-item-id')}|${prompt.find('[type=text]').val()}`))
     clearData()
   })
   prompt.find('.dialog-options > a').click(() => {

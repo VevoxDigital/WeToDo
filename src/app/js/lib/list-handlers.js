@@ -59,6 +59,25 @@ class CheckCommandHandler extends ListCommandHandler {
   }
 }
 
+class RenameCommandHandler extends ListCommandHandler {
+  constructor () {
+    super('RENAME')
+  }
+
+  handle (mod, list) {
+    super.handle(mod, list)
+
+    const argsIndex = mod.data.indexOf('|')
+
+    console.log(Number.parseInt(mod.data.substring(0, argsIndex), 10))
+
+    const entry = list.entries[Number.parseInt(mod.data.substring(0, argsIndex), 10)]
+    entry.title = mod.data.substring(argsIndex + 1)
+
+    entry.appendChange(mod.time, mod.user, 'EDIT')
+  }
+}
+
 class RenameListCommandHandler extends ListCommandHandler {
   constructor () {
     super('LISTRENAME')
@@ -76,5 +95,6 @@ exports.handlers = {
 
   CREATE: new CreateCommandHandler(),
   DELETE: new DeleteCommandHandler(),
-  CHECK: new CheckCommandHandler()
+  CHECK: new CheckCommandHandler(),
+  RENAME: new RenameCommandHandler()
 }
