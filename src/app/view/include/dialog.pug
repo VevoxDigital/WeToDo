@@ -52,14 +52,14 @@ section#dialogs
   +dialog('About', 'About ' + app.productName)
     h1
       = app.productName + ' '
-      small= app.version
+      small= 'v' + app.version
     p.text-center
       | WeToDo is an easy-to-use and open-source time-tracker and To-do list,
       | designed to be colaborative and friendly.
       
     p.text-center(style='margin: 5px')
       a(href='https://github.com/VevoxDigital/WeToDo' target='_system') GitHub
-      | -
+      = ' - '
       a(href='http://vevox.io/p/wetodo' target='_system') Workshop
     
     hr
