@@ -10,6 +10,7 @@ const ui = require('./')
   * Shows the given dialog
   *
   * @param {string} dialog The dialog to show
+  * @return {Element} The dialog shown
   */
 exports.show = dialog => {
   const d = $('#dialog' + dialog)
@@ -32,6 +33,26 @@ exports.show = dialog => {
       }, 250)
     }
   })
+
+  return d
+}
+
+/**
+  * @function
+  * Shows the given dialog, then focuses the element given. If a value is
+  * specified, the element's value is set to it.
+  *
+  * @param {string} dialog The dialog to show
+  * @param {string} element The element to focus
+  * @param {string} [value] The value to fill
+  * @return {Element} The dialog shown
+  */
+exports.showAndFocus = (dialog, element, value) => {
+  const d = exports.show(dialog)
+  const e = d.find(element).focus()
+  if (value) e.val(value)
+
+  return d
 }
 
 /**
