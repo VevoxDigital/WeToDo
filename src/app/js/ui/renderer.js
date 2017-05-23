@@ -185,6 +185,7 @@ exports.getChangeIconForType = type => {
     case 'CHECK': return 'check'
     case 'UNCHECK': return 'minus'
     case 'EDIT': return 'pencil'
+    case 'RELOCATE': return 'arrows-v'
 
     default: return 'question'
   }

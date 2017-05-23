@@ -1,7 +1,8 @@
 'use strict'
 
-const { List } = require('./lib/list')
+const { List, ListModification } = require('./lib/list')
 const { User } = require('./lib/user')
+const { handlers } = require('./lib/list-handlers')
 
 const ui = require('./ui')
 const data = require('./lib/data')
@@ -180,6 +181,22 @@ class App {
 
     ui.dialogs.bindDialogEvents(this)
     this.bindUserResolution()
+
+    $('#listNode').sortable({
+      start: (e, element) => {
+        element.item.data('from', element.item.index())
+      },
+      stop: (e, element) => {
+        if (!this.activeList) return
+
+        const from = element.item.data('from')
+        const to = element.item.index()
+
+        this.activeList.modifyAndSave(
+          ListModification.create(handlers.RELOCATE.command, this.user, `${from}-${to}`))
+        ui.renderer.renderEntries(this)
+      }
+    })
   }
 
   bindUserResolution () {
