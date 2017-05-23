@@ -159,14 +159,19 @@ exports.updateEntryCheckState = (entry, icon) => {
 exports.renderEntryChanges = (app, entry, element) => {
   const body = element.find('.list-body')
 
+  const maxChanges = 6
+
   body.find('ul').empty()
-  entry.changes.forEach(change => {
+  const changes = entry.changes.slice(Math.max(entry.changes.length - maxChanges, 0))
+  changes.forEach(change => {
     const e = app.templateNode.find('.list-item .list-change').clone()
     e.find('.list-change-icon').addClass('fa-' + exports.getChangeIconForType(change.type))
     e.find('.list-change-user').text('Unknown').attr('data-user', change.user)
     e.find('.list-change-time').attr('data-timestamp', change.time.getTime()).text(app.ago(change.time))
     e.prependTo(body.find('ul'))
   })
+
+  if (entry.changes.length > maxChanges) body.find('ul').append(`<li>...and ${entry.changes.length - maxChanges} other(s)</li>`)
 
   app.setActiveListItem(app.getActiveListItem())
 }
