@@ -78,6 +78,38 @@ describe('lib/list-handlers', () => {
     })
   })
 
+  describe('RelocateCommandHandler', () => {
+    it('should handle command: RENAME', () => {
+      expect(handlers.RELOCATE.command).to.be('RELOCATE')
+    })
+
+    it('should rename the list', () => {
+      const list = new List()
+      list.addEntry(new ListEntry('check', 'title1'))
+      list.addEntry(new ListEntry('check', 'title2'))
+
+      expect(list.entries[0].title).to.be('title1')
+
+      const mod = ListModification.create(handlers.RELOCATE.command, { id: 'local:0' }, '0-1')
+      handlers.RELOCATE.handle(mod, list)
+
+      expect(list.entries[0].title).to.be('title2')
+    })
+
+    it('should do nothing if invalid', () => {
+      const list = new List()
+      list.addEntry(new ListEntry('check', 'title1'))
+      list.addEntry(new ListEntry('check', 'title2'))
+
+      expect(list.entries[0].title).to.be('title1')
+
+      const mod = ListModification.create(handlers.RELOCATE.command, { id: 'local:0' }, 'foo')
+      handlers.RELOCATE.handle(mod, list)
+
+      expect(list.entries[0].title).to.be('title1')
+    })
+  })
+
   describe('RenameListCommandHandler', () => {
     it('should handle command: LISTRENAME', () => {
       expect(handlers.LISTRENAME.command).to.be('LISTRENAME')

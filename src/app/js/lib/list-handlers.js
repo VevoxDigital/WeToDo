@@ -69,12 +69,29 @@ class RenameCommandHandler extends ListCommandHandler {
 
     const argsIndex = mod.data.indexOf('|')
 
-    console.log(Number.parseInt(mod.data.substring(0, argsIndex), 10))
-
     const entry = list.entries[Number.parseInt(mod.data.substring(0, argsIndex), 10)]
     entry.title = mod.data.substring(argsIndex + 1)
 
     entry.appendChange(mod.time, mod.user, 'EDIT')
+  }
+}
+
+class RelocateCommandHandler extends ListCommandHandler {
+  constructor () {
+    super('RELOCATE')
+  }
+
+  handle (mod, list) {
+    super.handle(mod, list)
+
+    const match = /(\d+)-(\d+)/.exec(mod.data)
+    if (!match) return
+
+    const from = Number.parseInt(match[1], 10)
+    const to = Number.parseInt(match[2], 10)
+
+    list._entries.splice(to, 0, list._entries.splice(from, 1)[0])
+    list.entries[to].appendChange(mod.time, mod.user, 'RELOCATE')
   }
 }
 
@@ -96,5 +113,6 @@ exports.handlers = {
   CREATE: new CreateCommandHandler(),
   DELETE: new DeleteCommandHandler(),
   CHECK: new CheckCommandHandler(),
-  RENAME: new RenameCommandHandler()
+  RENAME: new RenameCommandHandler(),
+  RELOCATE: new RelocateCommandHandler()
 }
