@@ -192,6 +192,8 @@ class App {
         const from = element.item.data('from')
         const to = element.item.index()
 
+        if (from === to) return
+
         this.activeList.modifyAndSave(
           ListModification.create(handlers.RELOCATE.command, this.user, `${from}-${to}`))
         ui.renderer.renderEntries(this)
