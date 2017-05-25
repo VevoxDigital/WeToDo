@@ -304,11 +304,10 @@ describe('List', () => {
       expect(list.updateTime.getTime()).to.be(date.getTime())
     })
 
-    it('should return a new date if there are no changes', () => {
+    it('should return undefined if there are no changes', () => {
       const list = new lists.List()
 
-      expect(list.updateTime).to.be.a(Date)
-      expect(new Date().getTime() - list.updateTime.getTime()).to.be.lessThan(10)
+      expect(list.updateTime).to.be(undefined)
     })
   })
 
