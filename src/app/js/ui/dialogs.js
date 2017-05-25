@@ -197,7 +197,7 @@ exports.bindDialogListEdit = app => {
       app.activeList = undefined
 
       ui.renderer.renderLists(app)
-      ui.animator.shiftToHome(app)
+      ui.animator.shiftToMenu(app)
     })
   })
 }
