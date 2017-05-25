@@ -5,6 +5,8 @@ const { handlers } = require('../lib/list-handlers')
 const data = require('../lib/data')
 const ui = require('./')
 
+exports.ANIMATION_DURATION = 200
+
 /**
   * @function
   * Shows the given dialog
@@ -20,7 +22,7 @@ exports.show = dialog => {
     top: 0,
     opacity: 1
   }, {
-    duration: 250,
+    duration: exports.ANIMATION_DURATION,
     easing: 'ease-out',
     complete: () => {
       d.find('.dialog-bg').one('click', () => {
@@ -30,7 +32,7 @@ exports.show = dialog => {
       cover.velocity({
         top: '100%',
         height: '5px'
-      }, 250)
+      }, exports.ANIMATION_DURATION)
     }
   })
 
@@ -69,13 +71,13 @@ exports.hide = dialog => {
     top: 0,
     height: '100%'
   }, {
-    duration: 250,
+    duration: exports.ANIMATION_DURATION,
     complete: () => {
       d.velocity({
         opacity: 0,
         top: '-100%'
       }, {
-        duration: 250,
+        duration: exports.ANIMATION_DURATION,
         easing: 'ease-in',
         complete: () => { d.hide() }
       })
