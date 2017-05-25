@@ -72,9 +72,18 @@ exports.renderEntry = (app, entry, id) => {
     })
 
     // bind options
-    element.find('.list-options > .fa-pencil').click(() => {
+    const options = element.find('.list-options')
+    options.find('.fa-pencil').click(() => {
       exports.showOptionsDialog(app, entry, id)
     })
+    if (entry.type === 'check') {
+      options.find('.fa-check').click(() => {
+        element.find('.list-icon > a').click()
+      })
+    } else {
+      options.find('.fa-check').hide()
+      options.find('.fa-close').hide()
+    }
   } else {
     element.html(`<h1>${entry.title}</h1>`)
     element.click(() => { exports.showOptionsDialog(app, entry, id) })
