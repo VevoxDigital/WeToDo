@@ -24,6 +24,25 @@ input {
   }
 }
 
+textarea {
+  background: none;
+  border: 4px transparent solid;
+  border-bottom: 2px rgba($color-gray8, .6) solid;
+  border-left: 1px $color-gray1 solid;
+  color: rgba($color-gray8, .6);
+  display: block;
+  margin: 5px;
+  width: 100%;
+
+  &:hover,
+  &:active,
+  &:focus {
+    background: rgba($color-black, .05);
+    border-bottom-color: rgba(shade($color-blue, 20%), .6);
+    outline: none;
+  }
+}
+
 [type=submit],
 .btn {
   background: $color-blue;

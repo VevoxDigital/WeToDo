@@ -71,6 +71,9 @@ exports.renderEntry = (app, entry, id) => {
       app.setActiveListItem(app.getActiveListItem() !== id && id)
     })
 
+    // update the description
+    element.find('.list-body > p').text(entry.description || '')
+
     // bind options
     const options = element.find('.list-options')
     options.find('.fa-pencil').click(() => {
@@ -98,7 +101,9 @@ exports.renderEntry = (app, entry, id) => {
 }
 
 exports.showOptionsDialog = (app, entry, id) => {
-  const dialog = ui.dialogs.showAndFocus('ListItemEditPrompt', '[type=text]', entry.title)
+  const dialog = ui.dialogs.showAndFocus('ListItemEditPrompt', '[name="title"]', entry.title)
+  if (entry.type !== 'rule') dialog.find('[name="desc"]').val(entry.description)
+  else dialog.find('[name="desc"]').hide()
   dialog.attr('data-item-id', id)
 }
 

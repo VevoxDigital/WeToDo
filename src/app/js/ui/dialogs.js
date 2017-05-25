@@ -238,14 +238,30 @@ exports.bindDialogListItemEdit = app => {
   const prompt = $('#dialogListItemEditPrompt')
 
   const clearData = () => {
-    prompt.find('[type=text]').val('')
+    prompt.find('[name="title"]').val('')
+    prompt.find('[name="desc"]').val('').show()
     prompt.find('.dialog-close').click()
     ui.renderer.renderEntries(app)
   }
 
   prompt.find('form').submit(() => {
-    app.activeList.modifyAndSave(
-      ListModification.create(handlers.RENAME.command, app.user, `${prompt.attr('data-item-id')}|${prompt.find('[type=text]').val()}`))
+    const entry = app.activeList.entries[Number.parseInt(prompt.attr('data-item-id'), 10)]
+
+    if (prompt.find('[name="title"]').val() !== entry.title) {
+      app.activeList.addModification(
+        ListModification.create(handlers.RENAME.command, app.user, `${prompt.attr('data-item-id')}|${prompt.find('[name="title"]').val()}`)
+      )
+      app.activeList.applyLast()
+    }
+    if (prompt.find('[name="desc"]').val() !== entry.description) {
+      app.activeList.addModification(
+        ListModification.create(handlers.CHANGEDESC.command, app.user, `${prompt.attr('data-item-id')}|${prompt.find('[name="desc"]').val()}`)
+      )
+      app.activeList.applyLast()
+    }
+
+    app.activeList.save()
+
     clearData()
   })
   prompt.find('.dialog-options > a').click(() => {

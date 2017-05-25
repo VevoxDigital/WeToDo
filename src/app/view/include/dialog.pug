@@ -37,8 +37,9 @@ section#dialogs
       
   +dialog('ListItemEditPrompt', 'Edit Item', 'pencil')
     form(action='javascript:')
-      input(type='text')
-      input(type='submit' value='Rename')
+      input(type='text' name='title')
+      textarea(type='text' name='desc')
+      input(type='submit' value='Update')
     .dialog-options
       a(href='javascript:') Delete Item
   

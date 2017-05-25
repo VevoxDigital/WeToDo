@@ -109,6 +109,21 @@ class RenameListCommandHandler extends ListCommandHandler {
   }
 }
 
+class ChangeDescCommandHandler extends ListCommandHandler {
+  constructor () {
+    super('CHANGEDESC')
+  }
+
+  handle (mod, list) {
+    super.handle(mod, list)
+
+    const argsIndex = mod.data.indexOf('|')
+
+    const entry = list.entries[Number.parseInt(mod.data.substring(0, argsIndex), 10)]
+    entry.description = mod.data.substring(argsIndex + 1) || undefined
+  }
+}
+
 exports.handlers = {
   LISTRENAME: new RenameListCommandHandler(),
 
@@ -116,5 +131,6 @@ exports.handlers = {
   DELETE: new DeleteCommandHandler(),
   CHECK: new CheckCommandHandler(),
   RENAME: new RenameCommandHandler(),
-  RELOCATE: new RelocateCommandHandler()
+  RELOCATE: new RelocateCommandHandler(),
+  CHANGEDESC: new ChangeDescCommandHandler()
 }
