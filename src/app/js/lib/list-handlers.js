@@ -90,6 +90,7 @@ class RelocateCommandHandler extends ListCommandHandler {
     const from = Number.parseInt(match[1], 10)
     const to = Number.parseInt(match[2], 10)
 
+    /* istanbul ignore if */
     if (from === to) return
 
     list._entries.splice(to, 0, list._entries.splice(from, 1)[0])
@@ -120,7 +121,7 @@ class ChangeDescCommandHandler extends ListCommandHandler {
     const argsIndex = mod.data.indexOf('|')
 
     const entry = list.entries[Number.parseInt(mod.data.substring(0, argsIndex), 10)]
-    entry.description = mod.data.substring(argsIndex + 1) || undefined
+    entry.description = mod.data.substring(argsIndex + 1) || /* istanbul ignore next */ undefined
   }
 }
 

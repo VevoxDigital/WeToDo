@@ -110,6 +110,25 @@ describe('lib/list-handlers', () => {
     })
   })
 
+  describe('ChangeDescCommandHandler', () => {
+    it('should handle command: CHANGEDESC', () => {
+      expect(handlers.CHANGEDESC.command).to.be('CHANGEDESC')
+    })
+
+    it('should update item\'s description', () => {
+      const list = new List()
+      const entry = new ListEntry('check', 'title')
+      list.addEntry(entry)
+
+      expect(entry.description).to.be(undefined)
+
+      const mod = ListModification.create(handlers.CHANGEDESC.command, { id: 'local:0' }, '0|desc2')
+      handlers.CHANGEDESC.handle(mod, list)
+
+      expect(entry.description).to.be('desc2')
+    })
+  })
+
   describe('RenameListCommandHandler', () => {
     it('should handle command: LISTRENAME', () => {
       expect(handlers.LISTRENAME.command).to.be('LISTRENAME')
