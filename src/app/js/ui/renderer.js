@@ -223,7 +223,7 @@ exports.renderLists = app => {
   if (app.lists.size > 0) {
     menu.find('p').hide()
     const lists = [...app.lists.values()]
-    lists.sort((a, b) => { return a.updateTime.getTime() - b.updateTime.getTime() })
+    lists.sort((a, b) => { return (b.updateTime ? b.updateTime.getTime() : 0) - (a.updateTime ? a.updateTime.getTime() : 0) })
 
     for (const list of lists) {
       // TODO Check if lists are favorited, assign target accordingly
@@ -233,7 +233,8 @@ exports.renderLists = app => {
       const node = app.templateNode.find('.list').clone()
       node.find('.list-icon > .fa').addClass(list.isShared() ? 'fa-users' : 'fa-bars')
       node.find('h1').text(list.title)
-      node.find('.list-change-time').text(app.ago(list.updateTime.getTime()))
+      if (list.updateTime) node.find('.list-change-time').text(app.ago(list.updateTime.getTime()))
+      else node.find('.list-change').text('No Items Yet')
 
       node.click(() => {
         app.activeList = list

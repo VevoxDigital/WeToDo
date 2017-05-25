@@ -184,7 +184,7 @@ exports.List = class List {
   }
   get updateTime () {
     // TODO Store creation time somehow
-    return this.modifications.length ? this.modifications.pop().time : new Date()
+    return this.modifications.length ? this.modifications.pop().time : undefined
   }
 
   /**
