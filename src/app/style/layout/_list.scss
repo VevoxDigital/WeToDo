@@ -76,6 +76,12 @@
         font-weight: 600;
         margin: 0;
         padding: 0;
+
+        small {
+          color: $color-gray4;
+          font-size: 60%;
+          padding: 0 10px;
+        }
       }
 
       ul {

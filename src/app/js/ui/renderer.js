@@ -226,8 +226,7 @@ exports.renderLists = app => {
     lists.sort((a, b) => { return (b.updateTime ? b.updateTime.getTime() : 0) - (a.updateTime ? a.updateTime.getTime() : 0) })
 
     for (const list of lists) {
-      // TODO Check if lists are favorited, assign target accordingly
-      const target = $('#menuCategory' + (list.isShared() ? 'Shared' : (list.isFavorite ? 'Favorites' : 'Personal')))
+      const target = $('#menuCategory' + (list.isFavorite ? 'Favorites' : 'Lists'))
       target.show().prev().show()
 
       exports.renderList(app, list, target)
@@ -244,6 +243,8 @@ exports.renderList = (app, list, target) => {
   })
 
   node.find('h1').text(list.title)
+  if (list.isShared()) node.find('h1').append('<small>Shared</small>')
+
   if (list.updateTime) node.find('.list-change-time').text(app.ago(list.updateTime.getTime()))
   else node.find('.list-change').text('No Items Yet')
 
