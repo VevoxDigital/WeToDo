@@ -29,7 +29,6 @@ class App {
 
     Object.defineProperty(this, 'storage', { value: window.localStorage })
     Object.defineProperty(this, 'lists', { value: new Map() })
-    // TODO Define some property on a list that determines if its "favorited" or not
   }
 
   /**
