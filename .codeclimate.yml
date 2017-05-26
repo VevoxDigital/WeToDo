@@ -6,6 +6,7 @@ engines:
     enabled: true
     exclude_paths:
     - test/ # Please stop looking for duplicates in tests
+    - Gruntfile.js # Really...?
     config:
       languages:
       - javascript
