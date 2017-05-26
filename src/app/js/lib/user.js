@@ -41,6 +41,9 @@ exports.LocalProviderResolver = class LocalProviderResolver extends exports.Prov
 }
 exports.ProviderResolver.registerResolver(new exports.LocalProviderResolver())
 
+// this will act as our "cache"
+const cache = new Map()
+
 exports.User = class User {
   constructor (id) {
     assert.strictEqual(typeof id, 'string')
@@ -57,12 +60,18 @@ exports.User = class User {
   }
 
   resolve () {
-    // TODO Read from cache
+    if (!cache.has(this.provider)) cache.set(this.provider, new Map())
+    const ids = cache.get(this.provider)
+
+    if (ids.has(this.uid)) return new Promise(ids.get(this.uid))
+
     const provider = resolvers.get(this.provider)
     assert.ok(provider, 'Unknown provider: ' + this.provider)
 
     return provider.resolve(this.uid).then(data => {
       Object.defineProperty(this, 'data', { value: data })
+      ids.set(this.uid, this)
+      return this
     })
   }
 }

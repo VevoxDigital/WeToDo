@@ -1,6 +1,7 @@
 'use strict'
 
 const { handlers } = require('./list-handlers')
+const { User } = require('./user')
 
 const genUuid = require('uuid/v4')
 const assert = require('assert')
@@ -41,9 +42,7 @@ exports.ListModification = class ListModification {
     * @return {Promise<object>}
     */
   resolveUser () {
-    // TODO Fetch user information from user ID
-    // possibly a separate user resolver?
-    return new Promise(resolve => { resolve(this.user) })
+    return new User(this.user).resolve()
   }
 
   /**
@@ -187,7 +186,6 @@ exports.List = class List {
     return this._users.slice()
   }
   get updateTime () {
-    // TODO Store creation time somehow
     return this.modifications.length ? this.modifications.pop().time : undefined
   }
 
@@ -287,8 +285,10 @@ exports.List = class List {
     * @return {Promise<Array<User>>}
     */
   resolveUsers () {
-    // TODO User resolution
-    return new Promise(resolve => { return resolve(this.users) })
+    const resolutions = [ ]
+    this.users.forEach(user => { resolutions.push(user.resolve()) })
+
+    return Promise.all(resolutions)
   }
 
   /**
