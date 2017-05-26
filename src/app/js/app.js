@@ -101,7 +101,7 @@ class App {
     }).then(lists => {
       lists.forEach(list => { if (list) this.lists.set(list.uuid, list) })
       this.emit('ready')
-    }).catch(console.error)
+    }).catch(err => { console.error(err) })
   }
 
   // The user is fully loaded (and resolved)
@@ -115,11 +115,12 @@ class App {
 
     // set the updater for time ago on list timestamps
     setInterval(() => {
+      const app = this
       $('#listNode .list-change-time').each(function () {
         const times = $(this)
         const time = Number.parseInt(times.attr('data-timestamp'), 10)
 
-        times.text(this.ago(time))
+        times.text(app.ago(time))
       })
       ui.renderer.renderLists(this) // re-render lists every time the time should update
     }, 1000 * 20) // every 20 seconds...?

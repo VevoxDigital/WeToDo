@@ -48,7 +48,7 @@ exports.getFileSystem = () => {
 
       navigator.webkitPersistentStorage.requestQuota(5 * 1024 * 1024, bytes => {
         window.requestFileSystem(window.LocalFileSystem.PERSISTENT, bytes, fs => {
-          exports.fs = fs
+          exports.fs = fs.root
           resolve()
         }, _handle(reject))
       }, _handle(reject))
@@ -69,7 +69,7 @@ exports.getFileSystem = () => {
   */
 exports.getListDir = () => {
   return new Promise((resolve, reject) => {
-    exports.fs.root.getDirectory(LIST_DIR, { create: true }, resolve, _handle(reject))
+    exports.fs.getDirectory(LIST_DIR, { create: true }, resolve, _handle(reject))
   })
 }
 

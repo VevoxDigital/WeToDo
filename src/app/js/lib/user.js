@@ -63,7 +63,7 @@ exports.User = class User {
     if (!cache.has(this.provider)) cache.set(this.provider, new Map())
     const ids = cache.get(this.provider)
 
-    if (ids.has(this.uid)) return new Promise(ids.get(this.uid))
+    if (ids.has(this.uid)) return Promise.resolve(ids.get(this.uid))
 
     const provider = resolvers.get(this.provider)
     assert.ok(provider, 'Unknown provider: ' + this.provider)
