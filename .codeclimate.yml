@@ -4,6 +4,9 @@
 engines:
   duplication:
     enabled: true
+    checks:
+      Similar code: # This thing throws false positives like crazy.
+        enabled: false
     exclude_paths:
     - test/ # Please stop looking for duplicates in tests
     - Gruntfile.js # Really...?
