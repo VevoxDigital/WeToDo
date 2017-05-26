@@ -7,6 +7,7 @@
     <author email="matt@vevox.io" href="http://vevox.io/p/wetodo">
         Vevox Digital
     </author>
+    <preference name="loadUrlTimeoutValue" value="700000" />
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
