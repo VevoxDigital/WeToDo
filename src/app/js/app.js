@@ -203,12 +203,19 @@ class App {
 
         const user = new User(e.attr('data-user'))
         user.resolve().then(() => {
-          e.attr('data-user-resolve', 1).text(user.data.name)
+          e.attr('data-user-resolve', 1).text(this.getUserResolutionText(e.attr('data-user-property') || 'name'))
         }).catch(() => {
           e.attr('data-user-resolve', -1)
         })
       })
     }, 100)
+  }
+
+  getUserResolutionText (user, prop) {
+    switch (prop) {
+      case 'name': return user.data.name
+      case 'premium': return user.data.premium ? 'Premium' : 'Standard'
+    }
   }
 
   /**

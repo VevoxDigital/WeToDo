@@ -47,8 +47,7 @@ exports.shiftToMenu = app => {
     let name = app.user.data.name
     name = name.indexOf(' ') > 0 ? name.substring(0, name.indexOf(' ')) : name
 
-    // TODO set account type
-    exports.shift(app, 'Hi, ' + name, 'Unknown account')
+    exports.shift(app, 'Hi, ' + name, app.getUserResolutionText('premium', app.user) + ' Account')
   }
 }
 

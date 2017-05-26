@@ -3,8 +3,8 @@
 const assert = require('assert')
 
 const LOCALS = [
-  'WeToDo',
-  'you'
+  { name: 'WeToDo', premium: true, technical: true },
+  { name: 'you', premium: false }
 ]
 
 const resolvers = new Map()
@@ -36,7 +36,7 @@ exports.LocalProviderResolver = class LocalProviderResolver extends exports.Prov
     const i = Number.parseInt(uid, 10)
     assert.ok(i < LOCALS.length, 'Unknown local user: ' + uid)
 
-    return new Promise(resolve => { resolve({ name: LOCALS[i] }) })
+    return new Promise(resolve => { resolve(LOCALS[i]) })
   }
 }
 exports.ProviderResolver.registerResolver(new exports.LocalProviderResolver())
