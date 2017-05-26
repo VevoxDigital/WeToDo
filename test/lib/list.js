@@ -164,6 +164,13 @@ describe('List', () => {
 
       expect(list.title).to.be(LIST_DATA.name)
     })
+
+    it('should be favorited if the title ends in an asterisk', () => {
+      const list = new lists.List(undefined, LIST_DATA.name + '*')
+
+      expect(list.title).to.be(LIST_DATA.name)
+      expect(list.isFavorite).to.be.ok()
+    })
   })
 
   describe('#addModification()', () => {
@@ -317,6 +324,13 @@ describe('List', () => {
       list.addModification(new lists.ListModification(ENTRY_STRING))
 
       expect(list.toString()).to.be(LIST_STRING)
+    })
+
+    it('should append an asterisk if the list is favorited', () => {
+      const list = new lists.List(undefined, LIST_DATA.name + '*', LIST_DATA.user)
+
+      expect(list.isFavorite).to.be.ok()
+      expect(list.toString().substr(0, LIST_DATA.name.length + 1).substr(-1)).to.be('*')
     })
   })
 })
