@@ -171,7 +171,7 @@ exports.List = class List {
     Object.defineProperty(this, '_mods', { value: [ ], writeable: true })
     Object.defineProperty(this, '_entries', { value: [ ], writeable: true })
 
-    if (title.substr(-1) === '*') {
+    if (title && title.substr(-1) === '*') {
       this.isFavorite = true
       title = title.slice(0, -1)
     }
