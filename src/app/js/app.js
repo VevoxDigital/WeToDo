@@ -12,14 +12,6 @@ const _ago = require('node-time-ago')
 const KEY_USER = 'user'
 const KEY_NEW = 'isNew'
 
-const ago = time => {
-  const a = _ago(time)
-
-  // the times are inaccurate by ~20 seconds, so we're just going to ignore
-  // anything less than a minute
-  return a.match(/seconds? ago$/i) ? 'just now' : a
-}
-
 class App {
   constructor () {
     this.on('init', () => { this.onInit() })
@@ -54,8 +46,11 @@ class App {
   }
 
   ago (date) {
-    // TODO Move the target method here
-    return ago(date)
+    const a = _ago(date)
+
+    // the times are inaccurate by ~20 seconds, so we're just going to ignore
+    // anything less than a minute
+    return a.match(/seconds? ago$/i) ? 'just now' : a
   }
 
   // Fired on 'init' event
@@ -124,7 +119,7 @@ class App {
         const times = $(this)
         const time = Number.parseInt(times.attr('data-timestamp'), 10)
 
-        times.text(ago(time))
+        times.text(this.ago(time))
       })
       ui.renderer.renderLists(this) // re-render lists every time the time should update
     }, 1000 * 20) // every 20 seconds...?
