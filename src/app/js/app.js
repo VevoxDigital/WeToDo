@@ -128,7 +128,7 @@ class App {
     // bind events
     $('a[target="_system"]').click(e => {
       e.preventDefault()
-      window.open($(e.currentTarget).attr('href'), '_system')
+      window.open($(e.currentTarget).attr('href'), '_system', '')
     })
     this.bindUIEvents()
 
@@ -176,6 +176,16 @@ class App {
 
     ui.dialogs.bindDialogEvents(this)
     this.bindUserResolution()
+
+    $(document).on('backbutton', e => {
+      if (this.activeList) {
+        e.preventDefault()
+        this.activeList = undefined
+        ui.animator.shiftToMenu(this)
+      } else {
+        navigator.app.exitApp()
+      }
+    })
 
     $('#listNode').sortable({
       start: (e, element) => {
