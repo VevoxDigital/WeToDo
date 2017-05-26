@@ -227,23 +227,32 @@ exports.renderLists = app => {
 
     for (const list of lists) {
       // TODO Check if lists are favorited, assign target accordingly
-      const target = $('#menuCategory' + (list.isShared() ? 'Shared' : 'Personal'))
+      const target = $('#menuCategory' + (list.isShared() ? 'Shared' : (list.isFavorite ? 'Favorites' : 'Personal')))
       target.show().prev().show()
 
-      const node = app.templateNode.find('.list').clone()
-      node.find('.list-icon > .fa').addClass(list.isShared() ? 'fa-users' : 'fa-bars')
-      node.find('h1').text(list.title)
-      if (list.updateTime) node.find('.list-change-time').text(app.ago(list.updateTime.getTime()))
-      else node.find('.list-change').text('No Items Yet')
-
-      node.click(() => {
-        app.activeList = list
-        exports.renderEntries(app)
-
-        ui.animator.shiftToList(app)
-      })
-
-      target.append(node)
+      exports.renderList(app, list, target)
     }
   } else menu.find('p').show()
+}
+
+exports.renderList = (app, list, target) => {
+  const node = app.templateNode.find('.list').clone()
+  node.find('.list-icon > .fa').addClass(list.isFavorite ? 'fa-star' : (list.isShared() ? 'fa-users' : 'fa-bars')).click(() => {
+    list.isFavorite = !list.isFavorite
+    list.save()
+    exports.renderLists(app)
+  })
+
+  node.find('h1').text(list.title)
+  if (list.updateTime) node.find('.list-change-time').text(app.ago(list.updateTime.getTime()))
+  else node.find('.list-change').text('No Items Yet')
+
+  node.click(() => {
+    app.activeList = list
+    exports.renderEntries(app)
+
+    ui.animator.shiftToList(app)
+  })
+
+  target.append(node)
 }

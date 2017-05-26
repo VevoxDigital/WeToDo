@@ -171,6 +171,10 @@ exports.List = class List {
     Object.defineProperty(this, '_mods', { value: [ ], writeable: true })
     Object.defineProperty(this, '_entries', { value: [ ], writeable: true })
 
+    if (title.substr(-1) === '*') {
+      this.isFavorite = true
+      title = title.slice(0, -1)
+    }
     this.title = title
   }
   get modifications () {
@@ -304,7 +308,7 @@ exports.List = class List {
     * @return {string}
     */
   toString () {
-    let str = `${this.title}\n${this.users.join(' ')}`
+    let str = `${this.title}${this.isFavorite ? '*' : ''}\n${this.users.join(' ')}`
     for (const entry of this.modifications) str += `\n${entry.toString()}`
 
     return str
