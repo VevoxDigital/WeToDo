@@ -4,10 +4,8 @@
 engines:
   duplication:
     enabled: true
-    checks:
-      # Disable 'Similar code' check, as it throws a lot of false positives
-      Similar code:
-        enabled: false
+    exclude_paths:
+    - test/ # Please stop looking for duplicates in tests
     config:
       languages:
       - javascript
