@@ -4,8 +4,8 @@ const expect = require('expect.js')
 
 const lists = require('../../src/app/js/lib/list')
 
-const ENTRY_STRING = '1234 CREATE g:123 note|fff'
-const ENTRY_DATA = { time: new Date(1234), command: 'CREATE', user: 'g:123', data: 'note|fff' }
+const ENTRY_STRING = '1234 CREATE local:0 note|fff'
+const ENTRY_DATA = { time: new Date(1234), command: 'CREATE', user: 'local:0', data: 'note|fff' }
 
 const LIST_STRING = 'Example List\ngh:1234\n' + ENTRY_STRING
 const LIST_DATA = { name: 'Example List', user: 'gh:1234' }
