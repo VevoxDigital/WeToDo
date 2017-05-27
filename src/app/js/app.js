@@ -165,7 +165,7 @@ class App {
     $('#header .fa-user').click(() => { ui.dialogs.alert('Collaborative list editing will be available soon!') })
 
     // return home in list view
-    $('#header .fa-bars').click(() => {
+    $('#header .nav-icon-brand > a').click(() => {
       if (this.activeList) {
         this.activeList = undefined
 

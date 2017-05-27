@@ -21,6 +21,16 @@ exports.shift = (app, title, desc, isRight) => {
   h1.css('top', 0).velocity({ top: height }, exports.ANIMATION_TIME, [ 250, 20 ])
   h2.css('top', 0).velocity({ top: height }, exports.ANIMATION_TIME + 50, [ 250, 20 ])
 
+  const back = $('#header .nav-icon-brand > a')
+  const brand = $('#header .nav-icon-brand > img')
+  if (isRight) {
+    back.show()
+    brand.hide()
+  } else {
+    brand.show()
+    back.hide()
+  }
+
   $('.body-content').velocity({
     left: isRight ? '-100vw' : 0
   }, {

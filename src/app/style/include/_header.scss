@@ -15,19 +15,24 @@
     padding: 15px;
     width: 100%;
 
+    .nav-icon-brand {
+      display: inline-block;
+    }
+
     .nav-icon {
       color: $color-white;
       display: inline-block;
-      font-size: 18pt;
+      font-size: 16pt;
+      max-height: 16pt;
       opacity: .5;
       text-decoration: none;
       transition: opacity 250ms;
       vertical-align: middle;
     }
 
-    .nav-icon:hover,
-    .nav-icon:focus,
-    .nav-icon:active {
+    a.nav-icon:hover,
+    a.nav-icon:focus,
+    a.nav-icon:active {
       opacity: .8;
     }
 
