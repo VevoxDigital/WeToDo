@@ -9,3 +9,5 @@ linters:
     enabled: false
   NestingDepth:
     enabled: false
+  QualifyingElement:
+    enabled: false
