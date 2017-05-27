@@ -57,10 +57,8 @@ section#dialogs
       a.btn.btn-confirm(href='javascript:') Okay
   
   //- About
-  +dialog('About', 'About ' + app.productName)
-    h1
-      = app.productName + ' '
-      small= 'v' + app.version
+  +dialog('About', `About ${app.productName} ${app.version}`)
+    img(src='resources/media2_banner.png')
     p.text-center
       | WeToDo is an easy-to-use and open-source time-tracker and To-do list,
       | designed to be colaborative and friendly.
