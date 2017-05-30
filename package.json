@@ -1,8 +1,8 @@
 {
   "name": "wetodo-client",
   "productName": "WeToDo",
-  "version": "1.0.0",
-  "description": "Easy-to-use tracker, notepad, and to-do list",
+  "version": "0.1.0",
+  "description": "Easy-to-use notepad, to-do tracker, and checklist",
   "main": "index.js",
   "scripts": {
     "start": "cordova run browser",
