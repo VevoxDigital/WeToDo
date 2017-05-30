@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="io.vevox.wetodo" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <!-- #meta -->
     <name>WeToDo</name>
     <description>
         Easy-to-use tracker, notepad, and to-do list
@@ -7,6 +8,8 @@
     <author email="matt@vevox.io" href="http://vevox.io/p/wetodo">
         Vevox Digital
     </author>
+
+    <!-- #settings -->
     <preference name="loadUrlTimeoutValue" value="700000" />
     <content src="index.html" />
     <access origin="*" />
@@ -16,13 +19,39 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+
+    <!-- #platforms -->
+    <!-- #platforms:android -->
     <platform name="android">
         <allow-intent href="market:*" />
+        <!--
+            ldpi    : 36x36 px
+            mdpi    : 48x48 px
+            hdpi    : 72x72 px
+            xhdpi   : 96x96 px
+            xxhdpi  : 144x144 px
+            xxxhdpi : 192x192 px
+        -->
+        <!-- menu icons -->
+        <icon src="res/android/menu_ldpi.png" density="ldpi" />
+        <icon src="res/android/menu_mdpi.png" density="mdpi" />
+        <icon src="res/android/menu_hdpi.png" density="hdpi" />
+        <icon src="res/android/menu_xhdpi.png" density="xhdpi" />
+        <icon src="res/android/menu_xxhdpi.png" density="xxhdpi" />
+        <icon src="res/android/menu_xxxhdpi.png" density="xxxhdpi" />
     </platform>
+    <!-- #patforms:ios -->
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
+        <!-- Define icons for iOS whenever the app is built for it. -->
     </platform>
+    <!-- #platforms:windows -->
+    <platform name="windows">
+        <!-- TODO Define Windows 10 icons and delploy for Win10 -->
+    </platform>
+
+    <!-- #engine -->
     <engine name="ios" spec="~4.3.1" />
     <engine name="android" spec="~6.1.2" />
     <plugin name="cordova-plugin-whitelist" spec="1" />
