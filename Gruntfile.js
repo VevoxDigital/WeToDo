@@ -2,18 +2,28 @@
 
 const app = require('./package.json')
 
+const BUILD_BANNER = `/*!
+ * ${app.productName} v${app.version} (${new Date().toUTCString()})
+ * ${app.description}
+ *
+ * ${app.homepage}
+ *
+ * @author  ${app.author.name}
+ * @license ${app.license}
+ */`
+
 exports = module.exports = grunt => {
   grunt.initConfig({
-    app: grunt.file.readJSON('package.json'),
+    app: app,
 
     babel: {
       options: {
         presets: [ 'es2015' ]
       },
       app: {
-        files: [
-          { expand: true, cwd: 'src/app', src: [ 'js/**/*.js' ], dest: 'www' }
-        ]
+        files: {
+          'tmp/app-babel.js': 'tmp/app.js'
+        }
       }
     },
 
@@ -21,16 +31,21 @@ exports = module.exports = grunt => {
       options: {
         external: [ 'jquery' ]
       },
-      app: {
+      build: {
         files: {
-          'www/app.js': [ 'www/js/**/*.js' ]
+          'tmp/app.js': [ 'src/app/js/**/*.js' ]
+        }
+      },
+      compile: {
+        files: {
+          'www/app.js': [ 'src/app/js/**/*.js' ]
         }
       }
     },
 
     clean: {
-      compile: [ 'www/' ],
-      tmp: [ 'tmp/', 'www/js' ]
+      app: [ 'www/' ],
+      tmp: [ 'tmp/' ]
     },
 
     copy: {
@@ -59,6 +74,20 @@ exports = module.exports = grunt => {
         files: [
           { expand: true, cwd: 'src/app/view', src: [ '*.pug' ], dest: 'www', ext: '.html' }
         ]
+      }
+    },
+
+    uglify: {
+      app: {
+        options: {
+          mangle: {
+            reserved: ['cordova', '$']
+          },
+          banner: BUILD_BANNER
+        },
+        files: {
+          'www/app.js': [ 'tmp/app-babel.js' ]
+        }
       }
     },
 
@@ -108,6 +137,7 @@ exports = module.exports = grunt => {
   grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-contrib-pug')
+  grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-mocha-istanbul')
   grunt.loadNpmTasks('grunt-sass')
   grunt.loadNpmTasks('grunt-shell')
@@ -118,23 +148,30 @@ exports = module.exports = grunt => {
     'copy:favicon'
   ])
 
+  // build for a full package
   grunt.registerTask('build', [
+    'clean:app',
     'copy:app',
+    'browserify:build',
     'babel:app',
-    'browserify:app',
     'pug:app',
-    'sass:app'
+    'uglify:app',
+    'sass:app',
+    'clean:tmp',
+    'shell:install'
   ])
 
+  // just compile for debugging
   grunt.registerTask('compile', [
-    'clean:compile',
-    'build',
-    'shell:install',
+    'copy:app',
+    'browserify:compile',
+    'pug:app',
+    'sass:app',
     'clean:tmp'
   ])
   grunt.registerTask('recompile', [
-    'build',
-    'clean:tmp'
+    'compile',
+    'shell:install'
   ])
 
   grunt.registerTask('run', [
