@@ -32,7 +32,8 @@ exports.shift = (app, title, desc, isRight) => {
   }
 
   $('.body-content').velocity({
-    left: isRight ? '-100vw' : 0
+    left: isRight ? '-100vw' : 0,
+    width: isRight ? '200vw' : '100vw'
   }, {
     duration: exports.ANIMATION_TIME,
     easing: [ 250, 20 ],
