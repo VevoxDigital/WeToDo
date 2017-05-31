@@ -81,7 +81,13 @@ exports = module.exports = grunt => {
       app: {
         options: {
           mangle: {
-            reserved: ['cordova', '$']
+            reserved: [
+              'cordova',
+              '$',
+              'List',
+              'ListModification',
+              'ListEntry'
+            ]
           },
           banner: BUILD_BANNER
         },
@@ -150,7 +156,6 @@ exports = module.exports = grunt => {
 
   // build for a full package
   grunt.registerTask('rebuild', [
-    'clean:app',
     'copy:app',
     'browserify:build',
     'babel:app',
@@ -161,6 +166,7 @@ exports = module.exports = grunt => {
     'shell:install'
   ])
   grunt.registerTask('build', [
+    'clean:app',
     'rebuild',
     'shell:install'
   ])
