@@ -158,11 +158,11 @@ class App {
   }
 
   bindUIEvents () {
-    // show about dialog on click
+    // bind navigation dialogs
     $('#header .fa-info').click(() => { ui.dialogs.show('About') })
-
-    // TODO Actual user dialog
-    $('#header .fa-user').click(() => { ui.dialogs.alert('Collaborative list editing will be available soon!') })
+    // TODO Actual user and settings dialog
+    $('#header .fa-user').click(() => { ui.dialogs.alert('Collaborative list editing will be available soon.') })
+    $('#header .fa-cog').click(() => { ui.dialogs.alert('Settings and push notifications will be available soon.') })
 
     // return home in list view
     $('#header .nav-icon-brand > a').click(() => {
