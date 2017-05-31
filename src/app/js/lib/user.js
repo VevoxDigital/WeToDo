@@ -36,7 +36,7 @@ exports.LocalProviderResolver = class LocalProviderResolver extends exports.Prov
     const i = Number.parseInt(uid, 10)
     assert.ok(i < LOCALS.length, 'Unknown local user: ' + uid)
 
-    return new Promise(resolve => { resolve(LOCALS[i]) })
+    return Promise.resolve(LOCALS[i])
   }
 }
 exports.ProviderResolver.registerResolver(new exports.LocalProviderResolver())
@@ -63,14 +63,17 @@ exports.User = class User {
     if (!cache.has(this.provider)) cache.set(this.provider, new Map())
     const ids = cache.get(this.provider)
 
-    if (ids.has(this.uid)) return Promise.resolve(ids.get(this.uid))
+    if (ids.has(this.uid)) {
+      Object.defineProperty(this, 'data', { value: ids.get(this.uid) })
+      return Promise.resolve(this)
+    }
 
     const provider = resolvers.get(this.provider)
     assert.ok(provider, 'Unknown provider: ' + this.provider)
 
     return provider.resolve(this.uid).then(data => {
       Object.defineProperty(this, 'data', { value: data })
-      ids.set(this.uid, this)
+      ids.set(this.uid, data)
       return this
     })
   }
