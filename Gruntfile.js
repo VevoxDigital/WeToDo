@@ -149,7 +149,7 @@ exports = module.exports = grunt => {
   ])
 
   // build for a full package
-  grunt.registerTask('build', [
+  grunt.registerTask('rebuild', [
     'clean:app',
     'copy:app',
     'browserify:build',
@@ -160,17 +160,21 @@ exports = module.exports = grunt => {
     'clean:tmp',
     'shell:install'
   ])
+  grunt.registerTask('build', [
+    'rebuild',
+    'shell:install'
+  ])
 
   // just compile for debugging
-  grunt.registerTask('compile', [
+  grunt.registerTask('recompile', [
     'copy:app',
     'browserify:compile',
     'pug:app',
     'sass:app',
     'clean:tmp'
   ])
-  grunt.registerTask('recompile', [
-    'compile',
+  grunt.registerTask('compile', [
+    'recompile',
     'shell:install'
   ])
 
