@@ -1,8 +1,7 @@
 'use strict'
 
-const { List, ListModification } = require('./lib/list')
+const { List } = require('./lib/list')
 const { User } = require('./lib/user')
-const { handlers } = require('./lib/list-handlers')
 
 const ui = require('./ui')
 const data = require('./lib/data')
@@ -187,7 +186,7 @@ class App {
       }
     })
 
-    $('#listNode').sortable({
+    /* $('#listNode').sortable({
       start: (e, element) => {
         element.item.data('from', element.item.index())
       },
@@ -203,7 +202,7 @@ class App {
           ListModification.create(handlers.RELOCATE.command, this.user, `${from}-${to}`))
         ui.renderer.renderEntries(this)
       }
-    })
+    }) */
   }
 
   bindUserResolution () {
