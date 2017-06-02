@@ -59,6 +59,7 @@
     "browserify": "^14.1.0",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.1",
+    "jquery.finger": "^0.1.6",
     "node-time-ago": "^1.0.0",
     "velocity-animate": "^1.5.0"
   }

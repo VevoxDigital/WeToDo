@@ -1,7 +1,8 @@
 'use strict'
 
-const { List } = require('./lib/list')
+const { List, ListModification } = require('./lib/list')
 const { User } = require('./lib/user')
+const { handlers } = require('./lib/list-handlers')
 
 const ui = require('./ui')
 const data = require('./lib/data')
@@ -110,6 +111,7 @@ class App {
 
     // constants
     Object.defineProperty(this, 'templateNode', { value: $('#listTemplateNode') })
+    Object.defineProperty(this, 'listNode', { value: $('#listNode') })
     Object.defineProperty(this, 'headerHeight', { value: $('#header').height() })
 
     // set the updater for time ago on list timestamps
@@ -174,6 +176,7 @@ class App {
     })
 
     ui.dialogs.bindDialogEvents(this)
+    this.bindListDrag()
     this.bindUserResolution()
 
     $(document).on('backbutton', e => {
@@ -203,6 +206,58 @@ class App {
         ui.renderer.renderEntries(this)
       }
     }) */
+  }
+
+  bindListDrag () {
+    const guide = this.templateNode.find('.list-reorder-guide')
+    const movementClass = 'list-item-moving'
+
+    let heldItem
+    this.listNode.on('press', '.list-item', e => {
+      heldItem = $(e.target).closest('.list-item')
+      heldItem.fromIndex = heldItem.index()
+      heldItem.addClass(movementClass)
+    })
+    $(document).on('touchmove mousemove', e => {
+      if (!heldItem) return
+      if (!$(e.target).is('#list') && !$.contains($('#list')[0], e.target)) {
+        heldItem.removeClass(movementClass)
+        heldItem = undefined
+        return
+      }
+      e.preventDefault()
+
+      guide.detach()
+
+      const targ = $(document.elementFromPoint($(document).width() / 2, e.pageY)).closest('.list-item')
+      if (targ[0]) { // i.e. we actually found '.list-item'
+        heldItem.toIndex = targ.index()
+
+        // try to place the guide
+        if (heldItem.toIndex >= this.activeList.entries.length) {
+          guide.appendTo(this.listNode)
+        } else guide.appendTo(this.listNode.children().eq(heldItem.toIndex))
+      } else if ($(e.target).is('#listOptions')) {
+        heldItem.toIndex = 0
+        guide.appendTo(this.listNode.children().eq(1))
+      } else {
+        heldItem.toIndex = this.activeList.entries.length
+        guide.appendTo(this.listNode)
+      }
+    }).on('touchend mouseup', e => {
+      if (!heldItem) return
+      e.preventDefault()
+
+      if (typeof heldItem.toIndex === 'number' && heldItem.fromIndex !== heldItem.toIndex) {
+        this.activeList.modifyAndSave(
+          ListModification.create(handlers.RELOCATE.command, this.user, `${heldItem.fromIndex}-${heldItem.toIndex}`))
+        ui.renderer.renderEntries(this)
+      }
+
+      heldItem.removeClass(movementClass)
+      heldItem = undefined
+      guide.detach()
+    })
   }
 
   bindUserResolution () {

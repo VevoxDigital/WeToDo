@@ -88,12 +88,16 @@ class RelocateCommandHandler extends ListCommandHandler {
     if (!match) return
 
     const from = Number.parseInt(match[1], 10)
-    const to = Number.parseInt(match[2], 10)
+    let to = Number.parseInt(match[2], 10)
 
     /* istanbul ignore if */
     if (from === to) return
 
-    list._entries.splice(to, 0, list._entries.splice(from, 1)[0])
+    if (to > from) to--
+
+    const entry = list._entries.splice(from, 1)[0]
+    if (list.entries[to]) list._entries.splice(to, 0, entry)
+    else list._entries.push(entry)
     list.entries[to].appendChange(mod.time, mod.user, 'RELOCATE')
   }
 }
