@@ -16,7 +16,7 @@ exports.ProviderResolver = class ProviderResolver {
     Object.defineProperty(this, 'provider', { value: provider, enumerable: true })
   }
 
-  resolve (uid) {
+  resolve /* istanbul ignore next */ (uid) {
     // no-op
   }
 }

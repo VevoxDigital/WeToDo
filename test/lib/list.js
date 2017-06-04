@@ -282,6 +282,7 @@ describe('List', () => {
   describe('#resolveUsers()', () => {
     it('should return a promise', () => {
       const list = new lists.List(undefined, '')
+      list._users.push({ resolve: () => { } })
 
       expect(list.resolveUsers()).to.be.a(Promise)
     })

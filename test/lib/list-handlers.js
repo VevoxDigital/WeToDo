@@ -83,14 +83,28 @@ describe('lib/list-handlers', () => {
       expect(handlers.RELOCATE.command).to.be('RELOCATE')
     })
 
-    it('should rename the list', () => {
+    it('should sort items in list', () => {
+      const list = new List()
+      list.addEntry(new ListEntry('check', 'title1'))
+      list.addEntry(new ListEntry('check', 'title2'))
+      list.addEntry(new ListEntry('check', 'title3'))
+
+      expect(list.entries[1].title).to.be('title2')
+
+      const mod = ListModification.create(handlers.RELOCATE.command, { id: 'local:0' }, '2-1')
+      handlers.RELOCATE.handle(mod, list)
+
+      expect(list.entries[1].title).to.be('title3')
+    })
+
+    it('should place items at end of list if target is greater than length', () => {
       const list = new List()
       list.addEntry(new ListEntry('check', 'title1'))
       list.addEntry(new ListEntry('check', 'title2'))
 
       expect(list.entries[0].title).to.be('title1')
 
-      const mod = ListModification.create(handlers.RELOCATE.command, { id: 'local:0' }, '0-1')
+      const mod = ListModification.create(handlers.RELOCATE.command, { id: 'local:0' }, '0-2')
       handlers.RELOCATE.handle(mod, list)
 
       expect(list.entries[0].title).to.be('title2')
