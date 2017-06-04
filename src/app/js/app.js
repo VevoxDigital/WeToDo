@@ -114,6 +114,8 @@ class App {
     Object.defineProperty(this, 'listNode', { value: $('#listNode') })
     Object.defineProperty(this, 'headerHeight', { value: $('#header').height() })
 
+    Object.defineProperty(this, 'sections', { value: { list: $('#list'), menu: $('#menu') } })
+
     // set the updater for time ago on list timestamps
     setInterval(() => {
       const app = this
@@ -241,21 +243,21 @@ class App {
     }
 
     // scroll the list near top/bottom
-    const listScrollTop = $('#list').offset().top
-    const listScrollBot = $('#list').height() + listScrollTop
+    const listScrollTop = this.sections.list.offset().top
+    const listScrollBot = this.sections.list.height() + listScrollTop
     const scrollThreshold = 80
     const scrollModifier = scrollThreshold / 20
     const scrollList = (e, y) => {
       const st = y - listScrollTop
       const sb = listScrollBot - y
 
-      if (st > 0 && st <= scrollThreshold) $('#list').scrollTop($('#list').scrollTop() - ((scrollThreshold - st) / scrollModifier))
-      if (sb > 0 && sb <= scrollThreshold) $('#list').scrollTop($('#list').scrollTop() + ((scrollThreshold - sb) / scrollModifier))
+      if (st > 0 && st <= scrollThreshold) this.sections.list.scrollTop(this.sections.list.scrollTop() - ((scrollThreshold - st) / scrollModifier))
+      if (sb > 0 && sb <= scrollThreshold) this.sections.list.scrollTop(this.sections.list.scrollTop() + ((scrollThreshold - sb) / scrollModifier))
     }
 
     $(document).on('touchmove mousemove', e => {
       if (!heldItem) return
-      if (!$(e.target).is('#list') && !$.contains($('#list')[0], e.target)) {
+      if (!$(e.target).is('#list') && !$.contains(this.sections.list[0], e.target)) {
         heldItem.removeClass(movementClass)
         heldItem = undefined
         return
@@ -285,7 +287,7 @@ class App {
     })
 
     // prevent scrolling
-    $('#list').on('touchmove', e => { if (heldItem) e.preventDefault() })
+    this.sections.list.on('touchmove', e => { if (heldItem) e.preventDefault() })
   }
 
   bindUserResolution () {
