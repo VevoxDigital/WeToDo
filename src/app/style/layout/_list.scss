@@ -26,6 +26,10 @@
     padding: 0 15px;
     padding-top: 10px;
     position: relative;
+    // touch-callout and user-select both stop the user from highlighting text
+    // instead of dragging an item.
+    -webkit-touch-callout: none;
+    user-select: none;
     width: 100%;
 
     &.list-item-rule {

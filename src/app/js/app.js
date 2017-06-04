@@ -212,12 +212,47 @@ class App {
     const guide = this.templateNode.find('.list-reorder-guide')
     const movementClass = 'list-item-moving'
 
+    // grab an item with 'press'
     let heldItem
     this.listNode.on('press', '.list-item', e => {
+      e.preventDefault()
+      e.stopPropagation()
+
       heldItem = $(e.target).closest('.list-item')
       heldItem.fromIndex = heldItem.index()
       heldItem.addClass(movementClass)
     })
+
+    // attempts to place the guide
+    const placeGuide = (e, targ) => {
+      if (targ[0]) {
+        // put the guide within the list itself
+        heldItem.toIndex = targ.index()
+        guide.appendTo(heldItem.toIndex >= this.activeList.entries.length ? this.listNode : this.listNode.children().eq(heldItem.toIndex))
+      } else if ($(e.target).is('#listOptions') || $.contains($('#listOptions')[0], e.target)) {
+        // if we're over the options, place near the top
+        heldItem.toIndex = 0
+        guide.appendTo(this.listNode.children().eq(1))
+      } else {
+        // if off the element (i.e. below it), place at the bottom
+        heldItem.toIndex = this.activeList.entries.length
+        guide.appendTo(this.listNode)
+      }
+    }
+
+    // scroll the list near top/bottom
+    const listScrollTop = $('#list').offset().top
+    const listScrollBot = $('#list').height() + listScrollTop
+    const scrollThreshold = 80
+    const scrollModifier = scrollThreshold / 20
+    const scrollList = (e, y) => {
+      const st = y - listScrollTop
+      const sb = listScrollBot - y
+
+      if (st > 0 && st <= scrollThreshold) $('#list').scrollTop($('#list').scrollTop() - ((scrollThreshold - st) / scrollModifier))
+      if (sb > 0 && sb <= scrollThreshold) $('#list').scrollTop($('#list').scrollTop() + ((scrollThreshold - sb) / scrollModifier))
+    }
+
     $(document).on('touchmove mousemove', e => {
       if (!heldItem) return
       if (!$(e.target).is('#list') && !$.contains($('#list')[0], e.target)) {
@@ -226,24 +261,14 @@ class App {
         return
       }
       e.preventDefault()
+      e.stopPropagation()
 
       guide.detach()
 
-      const targ = $(document.elementFromPoint($(document).width() / 2, e.pageY)).closest('.list-item')
-      if (targ[0]) { // i.e. we actually found '.list-item'
-        heldItem.toIndex = targ.index()
+      const y = e.pageY || e.originalEvent.touches[0].pageY
 
-        // try to place the guide
-        if (heldItem.toIndex >= this.activeList.entries.length) {
-          guide.appendTo(this.listNode)
-        } else guide.appendTo(this.listNode.children().eq(heldItem.toIndex))
-      } else if ($(e.target).is('#listOptions')) {
-        heldItem.toIndex = 0
-        guide.appendTo(this.listNode.children().eq(1))
-      } else {
-        heldItem.toIndex = this.activeList.entries.length
-        guide.appendTo(this.listNode)
-      }
+      placeGuide(e, $(document.elementFromPoint($(document).width() / 2, y)).closest('.list-item'))
+      scrollList(e, y)
     }).on('touchend mouseup', e => {
       if (!heldItem) return
       e.preventDefault()
@@ -258,6 +283,9 @@ class App {
       heldItem = undefined
       guide.detach()
     })
+
+    // prevent scrolling
+    $('#list').on('touchmove', e => { if (heldItem) e.preventDefault() })
   }
 
   bindUserResolution () {
