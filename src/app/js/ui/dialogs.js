@@ -264,8 +264,4 @@ exports.bindDialogListItemEdit = app => {
 
     clearData()
   })
-  prompt.find('.dialog-options > a').click(() => {
-    app.activeList.modifyAndSave(ListModification.create(handlers.DELETE.command, app.user, prompt.attr('data-item-id')))
-    clearData()
-  })
 }

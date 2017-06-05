@@ -63,7 +63,7 @@ exports.renderEntry = (app, entry, id) => {
     element.find('h1').text(entry.title)
 
     exports.renderEntryIcon(app, entry, element)
-    exports.renderEntryChanges(app, entry, element)
+    exports.renderEntryChanges(app, entry, element.find('ul'), 1)
 
     // set active list item on click
     element.click(e => {
@@ -79,14 +79,16 @@ exports.renderEntry = (app, entry, id) => {
     options.find('.fa-pencil').click(() => {
       exports.showOptionsDialog(app, entry, id)
     })
-    if (entry.type === 'check') {
-      options.find('.fa-check').click(() => {
-        element.find('.list-icon > a').click()
+    options.find('.fa-close').click(() => {
+      ui.dialogs.confirm('Are you sure you wish to delete this item?', () => {
+        app.activeList.modifyAndSave(ListModification.create(handlers.DELETE.command, app.user, id))
       })
-    } else {
-      options.find('.fa-check').hide()
-      options.find('.fa-close').hide()
-    }
+    })
+    options.find('.fa-info').click(() => {
+      const dialog = ui.dialogs.show('ListItemInfo')
+      dialog.find('h2').text(entry.title)
+      exports.renderEntryChanges(app, entry, dialog.find('ul'))
+    })
   } else {
     element.html(`<h1>${entry.title}</h1>`)
     element.click(() => { exports.showOptionsDialog(app, entry, id) })
@@ -102,7 +104,7 @@ exports.renderEntry = (app, entry, id) => {
 
 exports.showOptionsDialog = (app, entry, id) => {
   const dialog = ui.dialogs.showAndFocus('ListItemEditPrompt', '[name="title"]', entry.title)
-  if (entry.type !== 'rule') dialog.find('[name="desc"]').val(entry.description)
+  if (entry.type !== 'rule') dialog.find('[name="desc"]').show().val(entry.description)
   else dialog.find('[name="desc"]').hide()
   dialog.attr('data-item-id', id)
 }
@@ -128,7 +130,7 @@ exports.renderEntryIcon = (app, entry, element) => {
     icon.click(() => {
       app.activeList.modifyAndSave(ListModification.create(handlers.CHECK.command, app.user, element.attr('data-id')))
 
-      exports.renderEntryChanges(app, entry, element)
+      exports.renderEntryChanges(app, entry, element.find('ul'), 1)
       exports.updateEntryCheckState(entry, icon)
     })
   }
@@ -170,22 +172,19 @@ exports.updateEntryCheckState = (entry, icon) => {
   * @param {ListEntry} entry The entry to render from
   * @param {Element} element The element to render to
   */
-exports.renderEntryChanges = (app, entry, element) => {
-  const body = element.find('.list-body')
+exports.renderEntryChanges = (app, entry, element, maxChanges) => {
+  element.empty()
 
-  const maxChanges = 6
-
-  body.find('ul').empty()
-  const changes = entry.changes.slice(Math.max(entry.changes.length - maxChanges, 0))
+  const changes = maxChanges ? entry.changes.slice(Math.max(entry.changes.length - maxChanges, 0)) : entry.changes
   changes.forEach(change => {
     const e = app.templateNode.find('.list-item .list-change').clone()
     e.find('.list-change-icon').addClass('fa-' + exports.getChangeIconForType(change.type))
     e.find('.list-change-user').text('Unknown').attr('data-user', change.user)
     e.find('.list-change-time').attr('data-timestamp', change.time.getTime()).text(app.ago(change.time))
-    e.prependTo(body.find('ul'))
+    e.prependTo(element)
   })
 
-  if (entry.changes.length > maxChanges) body.find('ul').append(`<li>...and ${entry.changes.length - maxChanges} other(s)</li>`)
+  if (maxChanges && entry.changes.length > maxChanges) element.append(`<li>...and ${entry.changes.length - maxChanges} other change(s)</li>`)
 
   app.setActiveListItem(app.getActiveListItem())
 }

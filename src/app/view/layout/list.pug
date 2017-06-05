@@ -6,7 +6,7 @@ ul.list#listTemplateNode(style='display: none')
     .list-body
       hr
       h1 List Title
-      ul
+      ul.entry-changes
         li.list-change
           .list-change-icon.fa
           span.list-change-user Unnamed
@@ -14,15 +14,15 @@ ul.list#listTemplateNode(style='display: none')
       p ERR_NO_DATA The list description could not be queried.
       .list-options
         a.fa.fa-close(href='javascript:')
-        a.fa.fa-check(href='javascript:')
         a.fa.fa-pencil(href='javascript:')
+        a.fa.fa-info(href='javascript:')
   li.list
     .list-icon
       a.fa(href='javascript:')
     .list-body
       hr
       h1 List Title
-      ul
+      ul.entry-changes
         li.list-change
           | Updated 
           span.list-change-time an hour ago

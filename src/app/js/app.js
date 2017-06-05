@@ -339,7 +339,7 @@ class App {
     // if 'item' is a number, make that item active
     if (typeof item === 'number' && item >= 0) {
       const node = $('#listNode').find(`li[data-id=${item}]`)
-      node.find('p').show()
+      if (node.find('p').text()) node.find('p').show()
       node.find('.list-options').show()
       node.find('ul > li').show()
 

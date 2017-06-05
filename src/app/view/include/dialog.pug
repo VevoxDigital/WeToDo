@@ -37,11 +37,16 @@ section#dialogs
       
   +dialog('ListItemEditPrompt', 'Edit Item', 'pencil')
     form(action='javascript:')
-      input(type='text' name='title')
-      textarea(type='text' name='desc')
+      input(type='text' name='title' placeholder='Item Name')
+      textarea(type='text' name='desc' placeholder='Item Description')
       input(type='submit' value='Update')
-    .dialog-options
-      a(href='javascript:') Delete Item
+        
+  //- List Item Info
+  +dialog('ListItemInfo', 'Item Info', 'info')
+    h2.text-center Title
+    hr
+    h3 History:
+    ul.entry-changes
   
   //- Confirmation
   +dialog('Confirm', 'Confirm Action', 'question')
