@@ -6,13 +6,28 @@
 [![Code Style](https://img.shields.io/badge/code_style-standard-brightgreen.svg?style=flat-square)](http://standardjs.com)
 [![GitHub release](https://img.shields.io/github/release/VevoxDigital/WeToDo.svg?style=flat-square)](https://github.com/VevoxDigital/WeToDo/releases)
 
+[Workshop](http://vevox.io/p/wetodo) - [Documentation](http://wiki.vevox.io/projects/wetodo) - [License](LICENSE)
+
 ----
 
 WeToDo is a easy-to-use to-do list and notepad, made with both simplicity and power in mind. Keep track of your goals with a few simple taps.
 
-Moreover, with collaborative editing, you can decide who is bringing what to a party, make a grocery list for your family, keep track of pieces of a group project, and more!
+## Create, Manage, and Complete
+Easily create multiple lists, each containing their own unique mix of sortable checks, notes, and dividers.
 
-More information is available at the [Vevox Workshop](http://vevox.io/p/wetodo). Please submit any comments, questions, or issues through the [GitHub Issue Tracker](https://github.com/VevoxDigital/WeToDo/issues).
+Organize your thoughts, take notes on presentations, keep track of what you need for your dinner, check off your schools supplies as you buy them, and more!
+
+## Work Together
+With collaborative editing, you can decide who is bringing what to a party, make a grocery list for your family, keep track of pieces of a group project, and many others. Whatever you need to manage, WeToDo can help.
+
+More information about collaborative editing is available at the [Vevox Workshop](http://wiki.vevox.io/projects/wetodo/sharing).
+
+## Commit and Contribute
+WeToDo's client is open source: we are always welcome to take suggestions, feature requests, and other feedback to help improve our app.
+
+Want to add something on your own? Feel free to fork, do what you will, and submit a pull request; you could participate in WeToDo's development!
+
+Any comments, questions, or issues should be submitted through the [GitHub Issue Tracker](https://github.com/VevoxDigital/WeToDo/issues).
 
 ----
 
