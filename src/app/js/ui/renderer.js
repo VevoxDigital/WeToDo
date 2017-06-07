@@ -72,7 +72,9 @@ exports.renderEntry = (app, entry, id) => {
     })
 
     // update the description
-    element.find('.list-body > p').text(entry.description || '')
+    const desc = element.find('.list-body > p')
+    desc.text(entry.description || '')
+    desc.html(desc.html().replace('\\n', '<br>'))
 
     // bind options
     const options = element.find('.list-options')
@@ -104,7 +106,7 @@ exports.renderEntry = (app, entry, id) => {
 
 exports.showOptionsDialog = (app, entry, id) => {
   const dialog = ui.dialogs.showAndFocus('ListItemEditPrompt', '[name="title"]', entry.title)
-  if (entry.type !== 'rule') dialog.find('[name="desc"]').show().val(entry.description)
+  if (entry.type !== 'rule') dialog.find('[name="desc"]').show().val(entry.description.replace('\\n', '\n'))
   else dialog.find('[name="desc"]').hide()
   dialog.attr('data-item-id', id)
 }

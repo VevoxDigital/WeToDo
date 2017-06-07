@@ -20,6 +20,7 @@ exports.ListModification = class ListModification {
     */
   constructor (data) {
     if (typeof data !== 'string') throw new Error('expected string data, got ' + typeof data)
+    data = data.replace('\n', '\\n')
 
     let obj = exports.ListModification.pattern.exec(data)
     if (!obj) throw new Error('bad entry line: ' + data)
