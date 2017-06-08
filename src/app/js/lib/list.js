@@ -76,7 +76,7 @@ exports.ListModification.fromData = (time, command, user, data) => {
   assert.ok(time instanceof Date, 'time should be a Date')
   assert.strictEqual(typeof command, 'string')
   assert.strictEqual(typeof user, 'string')
-  assert.strictEqual(typeof data, 'string')
+  assert.ok(data)
 
   return new exports.ListModification(`${time.getTime()} ${command} ${user} ${data}`)
 }
