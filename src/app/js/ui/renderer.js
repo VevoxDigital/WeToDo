@@ -84,6 +84,7 @@ exports.renderEntry = (app, entry, id) => {
     options.find('.fa-close').click(() => {
       ui.dialogs.confirm('Are you sure you wish to delete this item?', () => {
         app.activeList.modifyAndSave(ListModification.create(handlers.DELETE.command, app.user, id))
+        exports.renderEntries()
       })
     })
     options.find('.fa-info').click(() => {
