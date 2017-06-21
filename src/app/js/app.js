@@ -277,7 +277,7 @@ class App {
 
       if (typeof heldItem.toIndex === 'number' && heldItem.fromIndex !== heldItem.toIndex) {
         this.activeList.modifyAndSave(
-          ListModification.create(handlers.RELOCATE.command, this.user, `${heldItem.fromIndex}-${heldItem.toIndex}`))
+          ListModification.create(handlers.RELOCATE.command, this.user, `${heldItem.attr('data-id')}-${heldItem.toIndex}`))
         ui.renderer.renderEntries(this)
       }
 

@@ -20,7 +20,9 @@ exports.renderEntries = app => {
   $(exports.NODE_ID).empty()
 
   if (app.activeList) {
-    for (let i = 0; i < app.activeList.entries.length; i++) exports.renderEntry(app, app.activeList.entries[i], i)
+    for (let i = 0; i < app.activeList.entries.length; i++) {
+      exports.renderEntry(app, app.activeList.entries[i], i)
+    }
     app.setActiveListItem()
   }
 }
@@ -48,16 +50,16 @@ exports.renderLastEntry = (app, list) => {
   * @param {ListEntry} entry The entry
   * @param {number} id The index of the entry
   */
-exports.renderEntry = (app, entry, id) => {
+exports.renderEntry = (app, entry, index) => {
   assert.ok(entry instanceof ListEntry, 'Expected ListEntry, got ' + (entry && entry.constructor.name))
-  assert.strictEqual(typeof id, 'number')
+  assert.ok(typeof index, 'number')
 
   const node = $(exports.NODE_ID)
-  node.find(`[data-id=${id}]`).remove()
+  node.find(`[data-id=${entry.id}]`).remove()
 
   // create a new element to begin rendering
   const element = app.templateNode.find('.list-item').clone()
-  element.addClass('list-item-' + entry.type).attr('data-id', id)
+  element.addClass('list-item-' + entry.type).attr('data-id', entry.id)
 
   if (entry.type !== 'rule') {
     element.find('h1').text(entry.title)
@@ -68,7 +70,7 @@ exports.renderEntry = (app, entry, id) => {
     // set active list item on click
     element.click(e => {
       if ($(e.target).is('a')) return
-      app.setActiveListItem(app.getActiveListItem() !== id && id)
+      app.setActiveListItem(app.getActiveListItem() !== entry.id && entry.id)
     })
 
     // update the description
@@ -79,12 +81,12 @@ exports.renderEntry = (app, entry, id) => {
     // bind options
     const options = element.find('.list-options')
     options.find('.fa-pencil').click(() => {
-      exports.showOptionsDialog(app, entry, id)
+      exports.showOptionsDialog(app, entry, entry.id)
     })
     options.find('.fa-close').click(() => {
       ui.dialogs.confirm('Are you sure you wish to delete this item?', () => {
-        app.activeList.modifyAndSave(ListModification.create(handlers.DELETE.command, app.user, id))
-        exports.renderEntries()
+        app.activeList.modifyAndSave(ListModification.create(handlers.DELETE.command, app.user, entry.id))
+        exports.renderEntries(app)
       })
     })
     options.find('.fa-info').click(() => {
@@ -94,20 +96,20 @@ exports.renderEntry = (app, entry, id) => {
     })
   } else {
     element.html(`<h1>${entry.title}</h1>`)
-    element.click(() => { exports.showOptionsDialog(app, entry, id) })
+    element.click(() => { exports.showOptionsDialog(app, entry, entry.id) })
   }
 
   // insert the item into the proper spot
   const items = node.children('li')
   if (items.length > 0) {
-    items.eq(id).remove()
-    items.eq(id - 1).after(element)
+    items.eq(index).remove()
+    items.eq(index - 1).after(element)
   } else node.append(element)
 }
 
 exports.showOptionsDialog = (app, entry, id) => {
   const dialog = ui.dialogs.showAndFocus('ListItemEditPrompt', '[name="title"]', entry.title)
-  if (entry.type !== 'rule') dialog.find('[name="desc"]').show().val(entry.description.replace('\\n', '\n'))
+  if (entry.type !== 'rule') dialog.find('[name="desc"]').show().val(entry.description ? entry.description.replace('\\n', '\n') : '')
   else dialog.find('[name="desc"]').hide()
   dialog.attr('data-item-id', id)
 }

@@ -245,7 +245,7 @@ exports.bindDialogListItemEdit = app => {
   }
 
   prompt.find('form').submit(() => {
-    const entry = app.activeList.entries[Number.parseInt(prompt.attr('data-item-id'), 10)]
+    const entry = app.activeList.getEntryByID(Number.parseInt(prompt.attr('data-item-id'), 10))
 
     if (prompt.find('[name="title"]').val() !== entry.title) {
       app.activeList.addModification(

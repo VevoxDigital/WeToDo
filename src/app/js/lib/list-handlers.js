@@ -3,6 +3,13 @@
 const lists = require('./list')
 const assert = require('assert')
 
+const TARGETED_SYMBOL = '|'
+
+function parseTargetedData (data) {
+  const i = data.indexOf(TARGETED_SYMBOL)
+  return [ data.substring(0, i), data.substring(i + 1) ]
+}
+
 class ListCommandHandler {
   constructor (command) {
     assert.strictEqual(typeof command, 'string')
@@ -24,8 +31,8 @@ class CreateCommandHandler extends ListCommandHandler {
   handle (mod, list) {
     super.handle(mod, list)
 
-    const argsIndex = mod.data.indexOf('|')
-    const entry = new lists.ListEntry(mod.data.substring(0, argsIndex), mod.data.substring(argsIndex + 1))
+    const data = parseTargetedData(mod.data)
+    const entry = new lists.ListEntry(list, data[0], data[1])
     entry.appendModification(mod)
 
     list.addEntry(entry)
@@ -40,7 +47,17 @@ class DeleteCommandHandler extends ListCommandHandler {
   handle (mod, list) {
     super.handle(mod, list)
 
-    list._entries.splice(Number.parseInt(mod.data, 10), 1)
+    let id = Number.parseInt(mod.data, 10)
+
+    // remove the entry
+    list._entries.splice(list.getEntryIndexFromID(id), 1)
+
+    // clean up modifications about this item
+    for (let i = 0; i < list._mods.length; i++) {
+      if (list._mods[i].data.startsWith(id + TARGETED_SYMBOL)) {
+        list._mods.splice(i--, 1)
+      }
+    }
   }
 }
 
@@ -52,7 +69,7 @@ class CheckCommandHandler extends ListCommandHandler {
   handle (mod, list) {
     super.handle(mod, list)
 
-    const entry = list.entries[Number.parseInt(mod.data, 10)]
+    const entry = list.getEntryByID(Number.parseInt(mod.data, 10))
     entry.checked = !entry.checked
 
     entry.appendChange(mod.time, mod.user, entry.checked ? 'CHECK' : 'UNCHECK')
@@ -69,7 +86,7 @@ class RenameCommandHandler extends ListCommandHandler {
 
     const argsIndex = mod.data.indexOf('|')
 
-    const entry = list.entries[Number.parseInt(mod.data.substring(0, argsIndex), 10)]
+    const entry = list.getEntryByID(Number.parseInt(mod.data.substring(0, argsIndex), 10))
     entry.title = mod.data.substring(argsIndex + 1)
 
     entry.appendChange(mod.time, mod.user, 'EDIT')
@@ -87,18 +104,21 @@ class RelocateCommandHandler extends ListCommandHandler {
     const match = /(\d+)-(\d+)/.exec(mod.data)
     if (!match) return
 
-    const from = Number.parseInt(match[1], 10)
+    const target = Number.parseInt(match[1], 10)
     let to = Number.parseInt(match[2], 10)
+
+    const from = list.getEntryIndexFromID(target)
 
     /* istanbul ignore if */
     if (from === to) return
-
     if (to > from) to--
 
     const entry = list._entries.splice(from, 1)[0]
+
     if (list.entries[to]) list._entries.splice(to, 0, entry)
     else list._entries.push(entry)
-    list.entries[to].appendChange(mod.time, mod.user, 'RELOCATE')
+
+    entry.appendChange(mod.time, mod.user, 'RELOCATE')
   }
 }
 
@@ -124,8 +144,10 @@ class ChangeDescCommandHandler extends ListCommandHandler {
 
     const argsIndex = mod.data.indexOf('|')
 
-    const entry = list.entries[Number.parseInt(mod.data.substring(0, argsIndex), 10)]
+    const entry = list.getEntryByID(Number.parseInt(mod.data.substring(0, argsIndex), 10))
     entry.description = mod.data.substring(argsIndex + 1) || /* istanbul ignore next */ undefined
+
+    entry.appendChange(mod.time, mod.user, 'EDIT')
   }
 }
 

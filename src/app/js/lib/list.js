@@ -98,10 +98,12 @@ exports.ListEntry = class ListEntry {
     * @param {string} type The type of entry
     * @param {string} title The title of this entry
     */
-  constructor (type, title) {
+  constructor (list, type, title) {
+    assert.strictEqual(list.constructor.name, 'List')
     assert.strictEqual(typeof type, 'string')
     assert.strictEqual(typeof title, 'string')
 
+    Object.defineProperty(this, 'id', { value: list.currentIndex++, enumerable: true })
     Object.defineProperty(this, 'type', { value: type, enumerable: true })
 
     this.title = title
@@ -175,6 +177,8 @@ exports.List = class List {
       title = title.slice(0, -1)
     }
     this.title = title
+
+    this.currentIndex = 0
   }
   get modifications () {
     return this._mods.slice()
@@ -226,6 +230,29 @@ exports.List = class List {
   addEntry (entry) {
     assert(entry instanceof exports.ListEntry, 'expected ListEntry')
     this._entries.push(entry)
+  }
+
+  /**
+    * @method
+    * Gets an entry by its ID
+    * @param {number} id The ID
+    * @return {ListEntry} The entry with the given id.
+    */
+  getEntryByID (id) {
+    return this.entries[this.getEntryIndexFromID(id)]
+  }
+
+  /**
+    * @method
+    * Gets an entry by its ID
+    * @param {number} id The ID
+    * @return {number} The index of the entry with the given ID, or -1
+    */
+  getEntryIndexFromID (id) {
+    for (let i = 0; i < this.entries.length; i++) {
+      if (this.entries[i].id === id) return i
+    }
+    return -1
   }
 
   /**
