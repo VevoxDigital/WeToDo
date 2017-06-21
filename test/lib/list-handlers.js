@@ -21,8 +21,8 @@ describe('lib/list-handlers', () => {
 
     it('should delete an entry at position', () => {
       const list = new List('foo')
-      list._entries.push('foo')
-      list._entries.push('bar')
+      list._entries.push(new ListEntry(list, 'note', 'foo'))
+      list._entries.push(new ListEntry(list, 'note', 'bar'))
 
       expect(list._entries.length).to.be(2)
 
@@ -30,7 +30,7 @@ describe('lib/list-handlers', () => {
       handlers.DELETE.handle(mod, list)
 
       expect(list._entries.length).to.be(1)
-      expect(list._entries[0]).to.be('bar')
+      expect(list._entries[0].title).to.be('bar')
     })
   })
 
@@ -41,7 +41,7 @@ describe('lib/list-handlers', () => {
 
     it('should check the entry', () => {
       const list = new List()
-      const entry = new ListEntry('check', 'Title')
+      const entry = new ListEntry(list, 'check', 'Title')
 
       list.addEntry(entry)
 
@@ -66,7 +66,7 @@ describe('lib/list-handlers', () => {
 
     it('should rename the list', () => {
       const list = new List()
-      const entry = new ListEntry('check', 'title1')
+      const entry = new ListEntry(list, 'check', 'title1')
       list.addEntry(entry)
 
       expect(entry.title).to.be('title1')
@@ -85,9 +85,9 @@ describe('lib/list-handlers', () => {
 
     it('should sort items in list', () => {
       const list = new List()
-      list.addEntry(new ListEntry('check', 'title1'))
-      list.addEntry(new ListEntry('check', 'title2'))
-      list.addEntry(new ListEntry('check', 'title3'))
+      list.addEntry(new ListEntry(list, 'check', 'title1'))
+      list.addEntry(new ListEntry(list, 'check', 'title2'))
+      list.addEntry(new ListEntry(list, 'check', 'title3'))
 
       expect(list.entries[1].title).to.be('title2')
 
@@ -99,8 +99,8 @@ describe('lib/list-handlers', () => {
 
     it('should place items at end of list if target is greater than length', () => {
       const list = new List()
-      list.addEntry(new ListEntry('check', 'title1'))
-      list.addEntry(new ListEntry('check', 'title2'))
+      list.addEntry(new ListEntry(list, 'check', 'title1'))
+      list.addEntry(new ListEntry(list, 'check', 'title2'))
 
       expect(list.entries[0].title).to.be('title1')
 
@@ -112,8 +112,8 @@ describe('lib/list-handlers', () => {
 
     it('should do nothing if invalid', () => {
       const list = new List()
-      list.addEntry(new ListEntry('check', 'title1'))
-      list.addEntry(new ListEntry('check', 'title2'))
+      list.addEntry(new ListEntry(list, 'check', 'title1'))
+      list.addEntry(new ListEntry(list, 'check', 'title2'))
 
       expect(list.entries[0].title).to.be('title1')
 
@@ -131,7 +131,7 @@ describe('lib/list-handlers', () => {
 
     it('should update item\'s description', () => {
       const list = new List()
-      const entry = new ListEntry('check', 'title')
+      const entry = new ListEntry(list, 'check', 'title')
       list.addEntry(entry)
 
       expect(entry.description).to.be(undefined)

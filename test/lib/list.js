@@ -108,7 +108,7 @@ describe('ListEntry', () => {
       const title = 'Foo'
       const type = 'note'
 
-      const entry = new lists.ListEntry(type, title)
+      const entry = new lists.ListEntry(new lists.List(), type, title)
 
       expect(entry.type).to.be(type)
       expect(entry.title).to.be(title)
@@ -117,7 +117,7 @@ describe('ListEntry', () => {
 
   describe('#appendChange()', () => {
     it('should append a given change', () => {
-      const entry = new lists.ListEntry('Foo', 'note')
+      const entry = new lists.ListEntry(new lists.List(), 'Foo', 'note')
 
       entry.appendChange(ENTRY_DATA.time, ENTRY_DATA.user, ENTRY_DATA.command)
 
@@ -130,7 +130,7 @@ describe('ListEntry', () => {
 
   describe('#appendModification', () => {
     it('should append a given modification', () => {
-      const entry = new lists.ListEntry('Foo', 'note')
+      const entry = new lists.ListEntry(new lists.List(), 'Foo', 'note')
 
       entry.appendModification(new lists.ListModification(ENTRY_STRING))
 
@@ -215,7 +215,7 @@ describe('List', () => {
   describe('#addEntry()', () => {
     it('should add an entry to the list', () => {
       const list = new lists.List(undefined, '')
-      list.addEntry(new lists.ListEntry('foo', 'note'))
+      list.addEntry(new lists.ListEntry(list, 'foo', 'note'))
 
       expect(list.entries.length).to.be(1)
     })
@@ -263,7 +263,7 @@ describe('List', () => {
   describe('#reset()', () => {
     it('should empty entries and call #applyFrom()', () => {
       const list = new lists.List(undefined, '')
-      list.addEntry(new lists.ListEntry('foo', 'note'))
+      list.addEntry(new lists.ListEntry(list, 'foo', 'note'))
 
       expect(list.entries.length).to.be(1)
 
