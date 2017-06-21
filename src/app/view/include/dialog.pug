@@ -23,8 +23,9 @@ section#dialogs
       input(type='text')
       input(type='submit' value='Rename')
     .dialog-options
-      a.fa.fa-close(href='javascript:')
-      a.fa.fa-users(href='javascript:')
+      a(href='javascript:' data-action='delete') Delete
+      a(href='javascript:' data-action='share') Share
+      a(href='javascript:' data-action='clear') Clear
   
   //- New list item
   +dialog('ListItemPrompt', 'New Item', 'plus')

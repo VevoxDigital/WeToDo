@@ -151,6 +151,22 @@ class ChangeDescCommandHandler extends ListCommandHandler {
   }
 }
 
+class ClearCommandHandler extends ListCommandHandler {
+  constructor () {
+    super('CLEAR')
+  }
+
+  handle (mod, list) {
+    super.handle(mod, list)
+
+    if (list._mods.length) {
+      list._mods.length = 0
+      list.reset()
+      list._mods.push(mod)
+    }
+  }
+}
+
 exports.handlers = {
   LISTRENAME: new RenameListCommandHandler(),
 
@@ -159,5 +175,6 @@ exports.handlers = {
   CHECK: new CheckCommandHandler(),
   RENAME: new RenameCommandHandler(),
   RELOCATE: new RelocateCommandHandler(),
-  CHANGEDESC: new ChangeDescCommandHandler()
+  CHANGEDESC: new ChangeDescCommandHandler(),
+  CLEAR: new ClearCommandHandler()
 }

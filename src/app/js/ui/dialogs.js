@@ -189,7 +189,7 @@ exports.bindDialogListEdit = app => {
     prompt.find('.dialog-close').click()
     ui.animator.shiftToList(app)
   })
-  prompt.find('.dialog-options > .fa-close').click(() => {
+  prompt.find('.dialog-options > [data-action=delete]').click(() => {
     prompt.find('.dialog-close').click()
     ui.dialogs.confirm('Really delete this list? This action cannot be undone!', () => {
       data.deleteList(app.activeList.uuid)
@@ -198,6 +198,14 @@ exports.bindDialogListEdit = app => {
 
       ui.renderer.renderLists(app)
       ui.animator.shiftToMenu(app)
+    })
+  })
+  prompt.find('.dialog-options > [data-action=clear]').click(() => {
+    prompt.find('.dialog-close').click()
+    ui.dialogs.confirm('Really clear this list? This removes all items, but leaves settings like shared users.', () => {
+      app.activeList.modifyAndSave(ListModification.create(handlers.CLEAR.command, app.user))
+      ui.renderer.renderEntries(app)
+      ui.renderer.renderLists(app)
     })
   })
 }
