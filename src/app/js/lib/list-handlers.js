@@ -54,7 +54,8 @@ class DeleteCommandHandler extends ListCommandHandler {
 
     // clean up modifications about this item
     for (let i = 0; i < list._mods.length; i++) {
-      if (list._mods[i].data.startsWith(id + TARGETED_SYMBOL)) {
+      const mod = list._mods[i]
+      if (mod.data.startsWith(id + TARGETED_SYMBOL) || (mod.data === '' + i && mod.handler.command !== exports.handlers.DELETE.command)) {
         list._mods.splice(i--, 1)
       }
     }
@@ -101,7 +102,7 @@ class RelocateCommandHandler extends ListCommandHandler {
   handle (mod, list) {
     super.handle(mod, list)
 
-    const match = /(\d+)|(\d+)/.exec(mod.data)
+    const match = /(\d+)\|(\d+)/.exec(mod.data)
     if (!match) return
 
     const target = Number.parseInt(match[1], 10)

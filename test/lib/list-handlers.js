@@ -37,9 +37,10 @@ describe('lib/list-handlers', () => {
       const list = new List()
 
       list.addModification(ListModification.create(handlers.RENAME.command, { id: 'local:0' }, '0|Test 1'))
+      list.addModification(ListModification.create(handlers.CHECK.command, { id: 'local:0' }, '0'))
       list.addModification(ListModification.create(handlers.DELETE.command, { id: 'local:0' }, '0'))
 
-      expect(list._mods.length).to.be(2)
+      expect(list._mods.length).to.be(3)
 
       list.applyLast()
       expect(list._mods.length).to.be(1)
@@ -103,7 +104,7 @@ describe('lib/list-handlers', () => {
 
       expect(list.entries[1].title).to.be('title2')
 
-      const mod = ListModification.create(handlers.RELOCATE.command, { id: 'local:0' }, '2-1')
+      const mod = ListModification.create(handlers.RELOCATE.command, { id: 'local:0' }, '2|1')
       handlers.RELOCATE.handle(mod, list)
 
       expect(list.entries[1].title).to.be('title3')
@@ -116,7 +117,7 @@ describe('lib/list-handlers', () => {
 
       expect(list.entries[0].title).to.be('title1')
 
-      const mod = ListModification.create(handlers.RELOCATE.command, { id: 'local:0' }, '0-2')
+      const mod = ListModification.create(handlers.RELOCATE.command, { id: 'local:0' }, '0|2')
       handlers.RELOCATE.handle(mod, list)
 
       expect(list.entries[0].title).to.be('title2')
