@@ -101,7 +101,7 @@ class RelocateCommandHandler extends ListCommandHandler {
   handle (mod, list) {
     super.handle(mod, list)
 
-    const match = /(\d+)-(\d+)/.exec(mod.data)
+    const match = /(\d+)|(\d+)/.exec(mod.data)
     if (!match) return
 
     const target = Number.parseInt(match[1], 10)
