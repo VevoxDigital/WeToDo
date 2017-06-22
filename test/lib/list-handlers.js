@@ -32,6 +32,18 @@ describe('lib/list-handlers', () => {
       expect(list._entries.length).to.be(1)
       expect(list._entries[0].title).to.be('bar')
     })
+
+    it('should clean up modification about this entry', () => {
+      const list = new List()
+
+      list.addModification(ListModification.create(handlers.RENAME.command, { id: 'local:0' }, '0|Test 1'))
+      list.addModification(ListModification.create(handlers.DELETE.command, { id: 'local:0' }, '0'))
+
+      expect(list._mods.length).to.be(2)
+
+      list.applyLast()
+      expect(list._mods.length).to.be(1)
+    })
   })
 
   describe('CheckCommandHandler', () => {
@@ -140,6 +152,29 @@ describe('lib/list-handlers', () => {
       handlers.CHANGEDESC.handle(mod, list)
 
       expect(entry.description).to.be('desc2')
+    })
+  })
+
+  describe('ClearCommandHandler', () => {
+    it('should handle command: CLEAR', () => {
+      expect(handlers.CLEAR.command).to.be('CLEAR')
+    })
+
+    it('should clear the list', () => {
+      const list = new List()
+      list.addModification(ListModification.create(handlers.CREATE.command, { id: 'local:0' }, 'note|Test1'))
+      list.addModification(ListModification.create(handlers.CREATE.command, { id: 'local:0' }, 'note|Test2'))
+
+      expect(list._mods.length).to.be(2)
+
+      list.addModification(ListModification.create(handlers.CLEAR.command, { id: 'local:0' }))
+      list.applyLast()
+
+      expect(list._mods.length).to.be(1)
+      expect(list._mods[0].handler.command).to.be(handlers.CLEAR.command)
+
+      list.applyLast()
+      expect(list._mods.length).to.be(1)
     })
   })
 

@@ -159,7 +159,7 @@ class ClearCommandHandler extends ListCommandHandler {
   handle (mod, list) {
     super.handle(mod, list)
 
-    if (list._mods.length) {
+    if (list._mods.length > 1) {
       list._mods.length = 0
       list.reset()
       list._mods.push(mod)
